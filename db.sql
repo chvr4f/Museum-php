@@ -15,15 +15,16 @@ CREATE TABLE utilisateur (
     type_utilisateur VARCHAR(20) NOT NULL,
     mot_de_passe VARCHAR(500) NOT NULL,
     role VARCHAR(30) NOT NULL
-) ENGINE=InnoDB;
+);
 
 -- TABLE employe
 CREATE TABLE employe (
-    id INT AUTO_INCREMENT PRIMARY KEY,    
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) UNIQUE NOT NULL,   
     mot_de_passe VARCHAR(500) NOT NULL,
-    role VARCHAR(30) NOT NULL,
+    role VARCHAR(100) NOT NULL,
     date_embauche TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+);
 
 -- TABLE visiteur
 CREATE TABLE visiteur (
@@ -35,7 +36,7 @@ CREATE TABLE visiteur (
     nom VARCHAR(100),
     prenom VARCHAR(100),
     type_visiteur VARCHAR(30)
-) ENGINE=InnoDB;
+);
 
 -- TABLE evenement
 CREATE TABLE evenement (
@@ -48,7 +49,7 @@ CREATE TABLE evenement (
     capacite INT NOT NULL,
     id_employe INT,
     FOREIGN KEY (id_employe) REFERENCES employe(id)
-) ENGINE=InnoDB;
+);
 
 -- TABLE billets
 CREATE TABLE billets (
@@ -60,7 +61,7 @@ CREATE TABLE billets (
     id_visiteur INT,
     FOREIGN KEY (id_evenement) REFERENCES evenement(id),
     FOREIGN KEY (id_visiteur) REFERENCES visiteur(id)
-) ENGINE=InnoDB;
+);
 
 -- TABLE achat
 CREATE TABLE achat (
@@ -68,7 +69,7 @@ CREATE TABLE achat (
     id_visiteur INT,
     date_achat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_visiteur) REFERENCES visiteur(id)
-) ENGINE=InnoDB;
+);
 
 -- TABLE article
 CREATE TABLE article (
@@ -79,7 +80,7 @@ CREATE TABLE article (
     quantite INT NOT NULL DEFAULT 0,
     id_achat INT,
     FOREIGN KEY (id_achat) REFERENCES achat(id)
-) ENGINE=InnoDB;
+);
 
 -- TABLE oeuvres
 CREATE TABLE oeuvres (
@@ -93,7 +94,7 @@ CREATE TABLE oeuvres (
     image_oeuvre VARCHAR(255),
     id_employe INT,
     FOREIGN KEY (id_employe) REFERENCES employe(id)
-) ENGINE=InnoDB;
+);
 
 -- TABLE avis
 CREATE TABLE avis (
@@ -114,4 +115,8 @@ CREATE TABLE avis (
         (id_evenement IS NOT NULL) OR 
         (id_article IS NOT NULL)
     )
-) ENGINE=InnoDB;
+);
+
+INSERT INTO employe (username, mot_de_passe, role) VALUES ('taha', 'employedesoeuvres', 'Employe Des Oeuvre');
+INSERT INTO employe (username, mot_de_passe, role) VALUES ('charaf', '123123', 'Admin');
+INSERT INTO employe (username, mot_de_passe, role) VALUES ('hajar', '123123', 'Employe Des Evenement');
