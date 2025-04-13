@@ -21,7 +21,7 @@ CREATE TABLE utilisateur (
 CREATE TABLE employe (
     id INT AUTO_INCREMENT PRIMARY KEY,    
     mot_de_passe VARCHAR(500) NOT NULL,
-    role VARCHAR(30) NOT NULL,
+    role VARCHAR(300) NOT NULL,
     date_embauche TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
