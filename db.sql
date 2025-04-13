@@ -22,6 +22,7 @@ CREATE TABLE employe (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,   
     mot_de_passe VARCHAR(500) NOT NULL,
+<<<<<<< HEAD
     role VARCHAR(100) NOT NULL,
     date_embauche TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
