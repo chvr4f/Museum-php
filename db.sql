@@ -47,6 +47,7 @@ CREATE TABLE evenement (
     date_fin DATE NOT NULL,
     lieu VARCHAR(100) NOT NULL,
     capacite INT NOT NULL,
+    image_evenement VARCHAR(255),
     id_employe INT,
     FOREIGN KEY (id_employe) REFERENCES employe(id)
 );
@@ -95,7 +96,6 @@ CREATE TABLE oeuvres (
     id_employe INT,
     FOREIGN KEY (id_employe) REFERENCES employe(id)
 );
-
 -- TABLE avis
 CREATE TABLE avis (
     id INT AUTO_INCREMENT PRIMARY KEY, 
@@ -117,6 +117,7 @@ CREATE TABLE avis (
     )
 );
 
-INSERT INTO employe (username, mot_de_passe, role) VALUES ('taha', 'employedesoeuvres', 'Employe Des Oeuvre');
-INSERT INTO employe (username, mot_de_passe, role) VALUES ('charaf', '123123', 'Admin');
-INSERT INTO employe (username, mot_de_passe, role) VALUES ('hajar', '123123', 'Employe Des Evenement');
+INSERT INTO employe (username, mot_de_passe, role) VALUES ('taha', '123123', 'oeuvres');
+INSERT INTO employe (username, mot_de_passe, role) VALUES ('charaf', '123123', 'admin');
+INSERT INTO employe (username, mot_de_passe, role) VALUES ('hajar', '123123', 'evenements');
+INSERT INTO employe (username, mot_de_passe, role) VALUES ('ouissal', '123123', 'visiteurs');

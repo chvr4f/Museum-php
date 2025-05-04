@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Travel Museum - Online Boutique</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <style>
+        /* Boutique-specific styles */
+        .boutique-hero {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+            url(pics/boutique.avif); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .boutique-hero-content {
+            margin-top: 5%;
+        }
+
+        .boutique-hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .boutique-hero-content p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .boutique-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .boutique-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .boutique-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .boutique-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .boutique-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .boutique-item {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .boutique-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .boutique-item-img {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .boutique-item-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .boutique-item:hover .boutique-item-img img {
+            transform: scale(1.05);
+        }
+
+        .boutique-item-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .boutique-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .boutique-item p {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .boutique-item-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 1rem;
+        }
+
+        .boutique-item-button {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-align: center;
+            text-decoration: none;
+            margin-top: auto;
+        }
+
+        .boutique-item-button:hover {
+            background: #333;
+        }
+
+        .boutique-categories {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .boutique-category {
+            padding: 0.6rem 1.2rem;
+            background: #f8f8f8;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .boutique-category.active,
+        .boutique-category:hover {
+            background: #000;
+            color: white;
+        }
+
+        /* Cart styles */
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            margin-top: 3%;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #d4af37;
+            color: #000;
+            border-radius: 50%;
+            width: 15px;
+            height: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        .cart-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            width: 350px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            z-index: 1000;
+        }
+        
+        .cart-dropdown.active {
+            display: block;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+        
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        
+        .cart-item-title {
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+        
+        .cart-item-price {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .cart-total {
+            font-weight: 700;
+            margin-top: 1rem;
+            text-align: right;
+        }
+        
+        .cart-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .cart-actions a {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .view-cart {
+            background: #f8f8f8;
+            color: #000;
+        }
+        
+        .checkout {
+            background: #000;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .boutique-hero {
+                height: 400px;
+            }
+            
+            .boutique-hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .boutique-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .cart-dropdown {
+                width: 300px;
+                right: -50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="first-header">
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+            </div>
+            <div class="logo"><a href="main.html">Time Travel</a></div>
+          
+            <div class="buttons">
+                <button><a href="boutique.html" class="header-button">Online Boutique</a></button>
+                <button><a href="tickets.html" class="header-button">Tickets</a></button>
+                
+                <button><a href="login.html" class="header-button">Login</a></button>
+
+                <div class="cart-icon" id="cartIcon">
+                    <i class='bx bx-cart'></i>
+                    <span class="cart-count">0</span>
+                    <div class="cart-dropdown" id="cartDropdown">
+                        <div class="cart-items" id="cartItems">
+                            <!-- Cart items will be added here dynamically -->
+                            <p class="empty-cart-message">Your cart is empty</p>
+                        </div>
+                        <div class="cart-total">
+                            Total: $<span id="cartTotal">0.00</span>
+                        </div>
+                        <div class="cart-actions">
+                            <a href="cart.html" class="view-cart">View Cart</a>
+                            <a href="checkout.html" class="checkout">Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </header>
+
+    <main>
+        <!-- Boutique Hero Section -->
+        <section class="boutique-hero">
+            <div class="boutique-hero-content">
+                <h1>Museum Boutique</h1>
+                <p>Bring a piece of history home with our exclusive collection of time-inspired merchandise</p>
+            </div>
+        </section>
+
+         <!-- Boutique Categories -->
+         <section class="boutique-section">
+            <div class="boutique-categories">
+                <div class="boutique-category active">All Items</div>
+                <div class="boutique-category">Ancient Era</div>
+                <div class="boutique-category">Medieval</div>
+                <div class="boutique-category">Industrial Age</div>
+                <div class="boutique-category">Future Tech</div>
+                <div class="boutique-category">Books</div>
+            </div>
+
+            <div class="boutique-header">
+                <h2>Featured Products</h2>
+                <p>Discover unique gifts and souvenirs from across the ages</p>
+            </div>
+
+            <div class="boutique-grid">
+                <!-- Product 1 -->
+                <div class="boutique-item">
+                    <div class="boutique-item-img">
+                        <img src="pics/product1.jpg">
+                    </div>
+                    <div class="boutique-item-content">
+                        <h3>Roman Coin Replica</h3>
+                        <p>Exact reproduction of a 1st century AD Roman denarius</p>
+                        <div class="boutique-item-price">$24.99</div>
+                        <a href="#" class="boutique-item-button">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="boutique-item">
+                    <div class="boutique-item-img">
+                        <img src="pics/product2.jpg">
+                    </div>
+                    <div class="boutique-item-content">
+                        <h3>Medieval Illuminated Journal</h3>
+                        <p>Handcrafted notebook with gold-leaf designs</p>
+                        <div class="boutique-item-price">$19.99</div>
+                        <a href="#" class="boutique-item-button">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="boutique-item">
+                    <div class="boutique-item-img">
+                        <img src="pics/product3.jpg">
+                    </div>
+                    <div class="boutique-item-content">
+                        <h3>Miniature Egyptian Sphinx</h3>
+                        <p>3D printed replica of the Great Sphinx of Giza</p>
+                        <div class="boutique-item-price">$32.50</div>
+                        <a href="#" class="boutique-item-button">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="boutique-item">
+                    <div class="boutique-item-img">
+                        <img src="pics/product4.jpg">
+                    </div>
+                    <div class="boutique-item-content">
+                        <h3>Steampunk Pocket Watch</h3>
+                        <p>Functional brass timepiece with antique finish</p>
+                        <div class="boutique-item-price">$49.99</div>
+                        <a href="#" class="boutique-item-button">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="boutique-item">
+                    <div class="boutique-item-img">
+                        <img src="pics/product5.jpg">
+                    </div>
+                    <div class="boutique-item-content">
+                        <h3>Space Exploration T-Shirt</h3>
+                        <p>100% cotton tee with vintage NASA design</p>
+                        <div class="boutique-item-price">$22.99</div>
+                        <a href="#" class="boutique-item-button">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="boutique-item">
+                    <div class="boutique-item-img">
+                        <img src="pics/product6.jpg">
+                    </div>
+                    <div class="boutique-item-content">
+                        <h3>"Through the Ages" Book</h3>
+                        <p>Illustrated history of human civilization</p>
+                        <div class="boutique-item-price">$29.95</div>
+                        <a href="#" class="boutique-item-button">Add to Cart</a>
+                    </div>
+                </div>
+                    <!-- Product 6 -->
+                    <div class="boutique-item">
+                        <div class="boutique-item-img">
+                            <img src="pics/product7.jpg">
+                        </div>
+                        <div class="boutique-item-content">
+                            <h3>"Through the Ages" Book</h3>
+                            <p>Illustrated history of human civilization</p>
+                            <div class="boutique-item-price">$29.95</div>
+                            <a href="#" class="boutique-item-button">Add to Cart</a>
+                        </div>
+                    </div>
+
+                <!-- Product 7 -->
+                <div class="boutique-item">
+                    <div class="boutique-item-img">
+                        <img src="pics/product8.jpg">
+                    </div>
+                    <div class="boutique-item-content">
+                        <h3>T-Rex Skeleton Model</h3>
+                        <p>Build-your-own dinosaur skeleton kit</p>
+                        <div class="boutique-item-price">$18.99</div>
+                        <a href="#" class="boutique-item-button">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 8 -->
+                <div class="boutique-item">
+                    <div class="boutique-item-img">
+                        <img src="pics/collection1.jpg" alt="">
+                    </div>
+                    <div class="boutique-item-content">
+                        <h3>Holographic Projector</h3>
+                        <p>Create mini holograms with your smartphone</p>
+                        <div class="boutique-item-price">$39.99</div>
+                        <a href="#" class="boutique-item-button">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section class="footer">
+        <div class="end">
+            <div class="company-info">
+                <h2>Time Travel</h2>
+            </div>
+            <div class="social">
+                <a href="#"><i class='bx bxl-facebook'></i></a>
+                <a href="#"><i class='bx bxl-twitter'></i></a>
+                <a href="#"><i class='bx bxl-instagram'></i></a>
+                <a href="#"><i class='bx bxl-tiktok'></i></a>
+            </div>
+        </div>
+        <div class="ends">
+            <div class="support">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Product</a></li>
+                    <li><a href="#">Help & Support</a></li>
+                    <li><a href="#">Return Policy</a></li>
+                    <li><a href="#">Terms Of Use</a></li>
+                </ul>
+            </div>
+            <div class="guides">
+                <h3>View Guides</h3>
+                <ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog Posts</a></li>
+                    <li><a href="#">Our Branches</a></li>
+                </ul>
+            </div>
+            <div class="contacts">
+                <h3>Contacts</h3>
+                <ul class="contact-list">
+                    <li><i class='bx bxs-map'></i>88 Time Travel Avenue</li>
+                    <li><i class='bx bxs-phone'></i>+1 555-TIME-TRV</li>
+                    <li><i class='bx bxs-mail-send'></i>shop@timetravelmuseum.org</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <div class="copyright">
+        <p>&#169; Time Travel All Rights Reserved 2023</p>
+    </div>
+
+    <script>
+        // Shopping cart functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartIcon = document.getElementById('cartIcon');
+            const cartDropdown = document.getElementById('cartDropdown');
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const cartCount = document.querySelector('.cart-count');
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            
+            let cart = [];
+            
+            // Toggle cart dropdown
+            cartIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                cartDropdown.classList.toggle('active');
+            });
+            
+            // Close cart when clicking outside
+            document.addEventListener('click', function() {
+                cartDropdown.classList.remove('active');
+            });
+            
+            // Add to cart functionality
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+                    const price = parseFloat(this.getAttribute('data-price'));
+                    const image = this.getAttribute('data-image');
+                    
+                    // Check if item already in cart
+                    const existingItem = cart.find(item => item.id === id);
+                    
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        cart.push({
+                            id,
+                            name,
+                            price,
+                            image,
+                            quantity: 1
+                        });
+                    }
+                    
+                    updateCart();
+                    cartDropdown.classList.add('active');
+                    
+                    // Add animation
+                    this.textContent = 'Added!';
+                    setTimeout(() => {
+                        this.textContent = 'Add to Cart';
+                    }, 1000);
+                });
+            });
+            
+            // Update cart display
+            function updateCart() {
+                // Clear cart items
+                cartItems.innerHTML = '';
+                
+                if (cart.length === 0) {
+                    cartItems.innerHTML = '<p class="empty-cart-message">Your cart is empty</p>';
+                } else {
+                    let total = 0;
+                    
+                    cart.forEach(item => {
+                        total += item.price * item.quantity;
+                        
+                        const cartItem = document.createElement('div');
+                        cartItem.className = 'cart-item';
+                        cartItem.innerHTML = `
+                            <img src="${item.image}" alt="${item.name}">
+                            <div class="cart-item-details">
+                                <div class="cart-item-title">${item.name}</div>
+                                <div class="cart-item-price">$${item.price.toFixed(2)} × ${item.quantity}</div>
+                            </div>
+                            <i class='bx bx-trash remove-item' data-id="${item.id}"></i>
+                        `;
+                        
+                        cartItems.appendChild(cartItem);
+                    });
+                    
+                    // Add remove item functionality
+                    document.querySelectorAll('.remove-item').forEach(button => {
+                        button.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const id = this.getAttribute('data-id');
+                            cart = cart.filter(item => item.id !== id);
+                            updateCart();
+                        });
+                    });
+                    
+                    cartTotal.textContent = total.toFixed(2);
+                }
+                
+                // Update cart count
+                const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+                cartCount.textContent = count;
+            }
+            
+            // Simple category filter functionality
+            document.querySelectorAll('.boutique-category').forEach(category => {
+                category.addEventListener('click', function() {
+                    // Remove active class from all categories
+                    document.querySelectorAll('.boutique-category').forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked category
+                    this.classList.add('active');
+                    
+                    // In a real implementation, you would filter products here
+                    // This is just a placeholder for the UI
+                });
+            });
+        });
+    </script>
+</body>
+</html>

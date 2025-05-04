@@ -4,6 +4,15 @@
     padding: 0;
     box-sizing: border-box;
 }
+/* Enable smooth scrolling for the whole HTML */
+html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Optional: Add some padding to sections to account for fixed header */
+  section {
+    scroll-margin-top: 100px; /* Adjust this value based on your header height */
+  } 
 
 body {
     font-family: 'Montserrat', sans-serif;
@@ -35,6 +44,7 @@ header{
     position: relative;
     height: 85px;
 }
+
 
 .logo {
     position: absolute;
@@ -75,6 +85,15 @@ header{
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s;
+}
+.buttons button a {
+    color: white;
+    text-decoration: none;
+        
+    font-size: 0.9rem;
+}
+.buttons button:hover a {
+    color: black;
 }
 
 .buttons button:hover {
@@ -188,7 +207,13 @@ nav a:hover::after {
     background: white;
     color: black;
 }
-
+.hero-button a {
+    color: white;
+    text-decoration: none;
+}
+.hero-button:hover a {
+    color: black;
+}
 /* Footer Styles */
 footer {
     background-color: #000;
@@ -209,70 +234,7 @@ footer a:hover {
 }
 
 /* Exhibitions Section */
-.exhibitions {
-    padding: 4rem 2rem;
-    background: #f8f8f8;
-    text-align: center;
-}
 
-.exhibitions h2 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    color: #000;
-}
-
-.exhibition-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.exhibition-card {
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
-}
-
-.exhibition-card:hover {
-    transform: translateY(-10px);
-}
-
-.exhibition-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.exhibition-card h3 {
-    padding: 1rem 1rem 0;
-    font-size: 1.5rem;
-}
-
-.exhibition-card p {
-    padding: 0.5rem 1rem;
-    color: #666;
-}
-
-.exhibition-button {
-    display: block;
-    margin: 1rem auto;
-    padding: 0.8rem 1.5rem;
-    background: #000;
-    color: white;
-    border: 2px solid;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.exhibition-button:hover {
-    background: transparent;
-    color: #000;
-}
 
 /* Visit Info Section */
 .visit-info {
@@ -649,16 +611,7 @@ footer a:hover {
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.form-group {
-    margin-bottom: 1.5rem;
-}
 
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #333;
-}
 
 .input-with-icon {
     position: relative;
@@ -743,11 +696,10 @@ footer a:hover {
     color: #666;
 }
 
-
 /* Review Section */
 .review {
     padding: 5rem 2rem;
-    background: #fff;
+    background: #f9f9f9;
     text-align: center;
 }
 
@@ -757,7 +709,13 @@ footer a:hover {
 
 .review .heading h2 {
     font-size: 2.5rem;
-    color: #000;
+    color: #222;
+    margin-bottom: 0.5rem;
+}
+
+.review .heading p {
+    color: #555;
+    font-size: 1.1rem;
 }
 
 .fans {
@@ -765,40 +723,142 @@ footer a:hover {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 0 auto 4rem;
 }
 
 .fans .box {
     background: white;
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .fans .box:hover {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 }
 
 .stars {
     color: #ffc107;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+    font-size: 1.3rem;
 }
 
 .fans p {
-    color: #666;
+    color: #444;
     margin-bottom: 1.5rem;
-    font-style: italic;
-    line-height: 1.6;
+    line-height: 1.7;
+    font-size: 1rem;
 }
 
-.fans h2 {
-    color: #000;
+.reviewer-info {
     margin-bottom: 1rem;
+    text-align: center;
+}
+
+.fans h3 {
+    color: #222;
+    margin-bottom: 0.3rem;
     font-size: 1.2rem;
 }
 
+.review-date {
+    color: #888;
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+/* Add Review Form */
+.add-review {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.add-review h3 {
+    font-size: 1.5rem;
+    color: #222;
+    margin-bottom: 1.5rem;
+}
+
+.review-form {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #444;
+    font-weight: 500;
+}
+
+/* Star Rating Input */
+.star-rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row-reverse;
+    margin: 1rem 0;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    font-size: 2rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+    margin: 0 0.2rem;
+}
+
+.star-rating input:checked ~ label,
+.star-rating input:hover ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #ffc107;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-group textarea:focus {
+    border-color: #555;
+    outline: none;
+}
+
+.submit-btn {
+    background: #222;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    background: #444;
+}
 .fans img {
     width: 80px;
     height: 80px;
@@ -809,6 +869,20 @@ footer a:hover {
     border: 3px solid #000;
 }
 
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .review {
+        padding: 3rem 1rem;
+    }
+    
+    .fans {
+        grid-template-columns: 1fr;
+    }
+    
+    .add-review {
+        padding: 1.5rem;
+    }
+}
 /* Footer Styles */
 .footer {
     background: #000;
@@ -889,6 +963,169 @@ footer a:hover {
 
 
 
+/* Header Styles with Fixed Positioning */
+header{
+    background-color: gray;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+}
+.first-header {
+    top: 0;
+}
+
+.second-header {
+    top: 85px; /* Matches first-header height */
+}
+
+.first-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000;
+    color: white;
+    padding: 1rem 2rem;
+    position: relative;
+    height: 85px;
+}
+
+
+/* Adjust main content to start below headers */
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+
+/* Visit Info Section */
+.visit-info {
+    padding: 4rem 2rem;
+    background: #000;
+    color: white;
+}
+
+.info-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.info-card {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+}
+
+.info-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.info-card p {
+    margin-bottom: 0.5rem;
+    color: #ccc;
+}
+
+/* Collections Page Specific Styles */
+.no-artworks {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.collection-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.collection-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.collection-image {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.collection-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.collection-card:hover .collection-image img {
+    transform: scale(1.05);
+}
+
+.time-period {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.collection-content {
+    padding: 1.5rem;
+}
+
+.collection-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #000;
+}
+
+.collection-content p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.collection-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    position: relative;
+    padding-right: 20px;
+}
+
+.collection-link::after {
+    content: '→';
+    position: absolute;
+    right: 0;
+    transition: right 0.3s ease;
+}
+
+.collection-link:hover::after {
+    right: -5px;
+}
 
 
 
@@ -896,3 +1133,127 @@ footer a:hover {
 
 
 
+
+
+
+
+
+.no-exhibition {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.exhibition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.exhibition-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.exhibition-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.exhibition-image-container {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.exhibition-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.exhibition-card:hover .exhibition-image {
+    transform: scale(1.05);
+}
+
+.exhibition-dates {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.exhibition-content {
+    padding: 1.5rem;
+}
+
+.exhibition-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #000;
+}
+
+.exhibition-location {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.exhibition-description {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.exhibition-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    position: relative;
+    padding-right: 20px;
+}
+
+.exhibition-link::after {
+    content: '→';
+    position: absolute;
+    right: 0;
+    transition: right 0.3s ease;
+}
+
+.exhibition-link:hover::after {
+    right: -5px;
+}
+
+/* Section Header Styles */
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 0 1rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #000;
+}
+
+.section-header p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 700px;
+    margin: 0 auto;
+}
