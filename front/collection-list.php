@@ -80,7 +80,6 @@ try {
     <!-- Sidebar -->
     <?php include 'sidebar.php'; ?>
 
-
     <!-- Main Content -->
     <div class="flex-1 p-5">
       <div class="flex justify-between items-center mb-5">
@@ -89,44 +88,57 @@ try {
           Add New Artwork
         </a>
       </div>
+      
+      <?php if (!empty($error)): ?>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5">
+          <?php echo htmlspecialchars($error); ?>
+        </div>
+      <?php endif; ?>
+      
       <div class="space-y-6">
-        <!-- Artworks Grid -->
-        <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          <?php foreach ($artworks as $art): ?>
-            <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-              <div class="h-48 w-full relative">
-                <img
-                  src="<?php echo htmlspecialchars($art['image_oeuvre'] ?? 'https://via.placeholder.com/300x200?text=No+Image'); ?>"
-                  alt="<?php echo htmlspecialchars($art['titre']); ?>"
-                  class="w-full h-full object-cover" />
-              </div>
-              <div class="p-4">
-                <h3 class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($art['titre']); ?></h3>
-                <p class="mt-1 text-sm text-gray-500"><?php echo htmlspecialchars($art['artiste']); ?></p>
-                <div class="mt-4 flex space-x-2">
-                  <a href="collection-form.php?edit=<?php echo $art['id']; ?>"
-                    class="flex-1 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-md hover:bg-indigo-100 text-center">
-                    Edit
-                  </a>
-                  <form action="collection-form.php" method="POST" class="inline">
-                    <input type="hidden" name="artwork_id" value="<?php echo $art['id']; ?>">
-                    <input type="hidden" name="current_image" value="<?php echo htmlspecialchars($art['image_oeuvre']); ?>">
-                    <input type="hidden" name="delete" value="1">
-                    <button type="submit"
-                      class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50 rounded-md hover:bg-gray-100"
-                      onclick="return confirm('Are you sure you want to delete this artwork?')">
-                      Delete
-                    </button>
-                  </form>
+        <?php if (empty($artworks)): ?>
+          <!-- No Artworks Message -->
+          <div class="bg-white rounded-lg shadow-sm p-8 text-center">
+            <p class="text-gray-500 text-lg">There are no artworks yet.</p>
+            <p class="text-gray-400 mt-2">Click "Add New Artwork" to get started.</p>
+          </div>
+        <?php else: ?>
+          <!-- Artworks Grid -->
+          <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            <?php foreach ($artworks as $art): ?>
+              <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                <div class="h-48 w-full relative">
+                  <img
+                    src="<?php echo htmlspecialchars($art['image_oeuvre'] ?? 'https://via.placeholder.com/300x200?text=No+Image'); ?>"
+                    alt="<?php echo htmlspecialchars($art['titre']); ?>"
+                    class="w-full h-full object-cover" />
+                </div>
+                <div class="p-4">
+                  <h3 class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($art['titre']); ?></h3>
+                  <p class="mt-1 text-sm text-gray-500"><?php echo htmlspecialchars($art['artiste']); ?></p>
+                  <div class="mt-4 flex space-x-2">
+                    <a href="collection-form.php?edit=<?php echo $art['id']; ?>"
+                      class="flex-1 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-md hover:bg-indigo-100 text-center">
+                      Edit
+                    </a>
+                    <form action="collection-form.php" method="POST" class="inline">
+                      <input type="hidden" name="artwork_id" value="<?php echo $art['id']; ?>">
+                      <input type="hidden" name="current_image" value="<?php echo htmlspecialchars($art['image_oeuvre']); ?>">
+                      <input type="hidden" name="delete" value="1">
+                      <button type="submit"
+                        class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50 rounded-md hover:bg-gray-100"
+                        onclick="return confirm('Are you sure you want to delete this artwork?')">
+                        Delete
+                      </button>
+                    </form>
+                  </div>
                 </div>
               </div>
-            </div>
-          <?php endforeach; ?>
-        </div>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
       </div>
     </div>
-
   </div>
 </body>
-
 </html>
