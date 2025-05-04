@@ -8,9 +8,10 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] !== 'evenements' && $_SES
     exit();
 }
 
-// Initialize variables
+// Initialize variables with default values
 $success = $error = '';
 $event = [
+    'id' => '',
     'titre' => '',
     'description' => '',
     'date_debut' => '',
@@ -48,8 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $imagePath = $_POST['current_image'];
         }
 
-        if (isset($_POST['cancel'])) {
-            // Cancel event
+        if (isset($_POST['delete'])) {
+            // Delete event
             $stmt = $pdo->prepare("DELETE FROM evenement WHERE id = ?");
             $stmt->execute([$_POST['event_id']]);
             
@@ -58,7 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 unlink($_POST['current_image']);
             }
             
-            $success = "Event cancelled successfully!";
+            $success = "Event deleted successfully!";
+            header('Location: events-list.php');
+            exit();
         } elseif (isset($_POST['update'])) {
             // Update event
             $stmt = $pdo->prepare("UPDATE evenement SET 
@@ -78,11 +81,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
             
             $success = "Event updated successfully!";
+            header('Location: events-list.php');
+            exit();
         } else {
             // Add new event
             $stmt = $pdo->prepare("INSERT INTO evenement 
-                (titre, description, date_debut, date_fin, lieu, capacite, image_evenement) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)");
+                (titre, description, date_debut, date_fin, lieu, capacite, image_evenement, id_employe) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             
             $stmt->execute([
                 $_POST['titre'],
@@ -91,10 +96,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_POST['date_fin'],
                 $_POST['lieu'],
                 $_POST['capacite'],
-                $imagePath
+                $imagePath,
+                $_SESSION['user_id']
             ]);
             
             $success = "Event added successfully!";
+            header('Location: events-list.php');
+            exit();
         }
     } catch (PDOException $e) {
         $error = "Database error: " . $e->getMessage();
@@ -110,7 +118,7 @@ if (isset($_GET['edit'])) {
         
         if ($event) {
             $edit_mode = true;
-            $current_image = $event['image_evenement'];
+            $current_image = $event['image_evenement'] ?? '';
         } else {
             $error = "Event not found";
         }
@@ -119,13 +127,12 @@ if (isset($_GET['edit'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Collection - Time Travel Museum</title>
+  <title>Events - Time Travel Museum</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -176,65 +183,61 @@ if (isset($_GET['edit'])) {
         <div class="flex-1 p-5">
             <div class="flex justify-between items-center mb-5">
                 <h1 class="text-2xl font-bold"><?php echo $edit_mode ? 'Edit Event' : 'Add New Event'; ?></h1>
-                <div class="text-gray-700">
-                    Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?> 
-                    (<?php echo htmlspecialchars($_SESSION['role']); ?>)
-                </div>
             </div>
 
             <?php if (!empty($success)): ?>
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-5">
-                    <?php echo $success; ?>
+                    <?php echo htmlspecialchars($success); ?>
                 </div>
             <?php endif; ?>
             
             <?php if (!empty($error)): ?>
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5">
-                    <?php echo $error; ?>
+                    <?php echo htmlspecialchars($error); ?>
                 </div>
             <?php endif; ?>
 
             <div class="bg-white rounded-lg shadow p-5 mb-5" id="card">
-                <form action="events-list.php" method="POST" enctype="multipart/form-data">
+                <form action="events-form.php" method="POST" enctype="multipart/form-data">
                     <?php if ($edit_mode): ?>
-                        <input type="hidden" name="event_id" value="<?php echo $event['id']; ?>">
+                        <input type="hidden" name="event_id" value="<?php echo htmlspecialchars($event['id'] ?? ''); ?>">
                         <input type="hidden" name="update" value="1">
-                        <input type="hidden" name="current_image" value="<?php echo htmlspecialchars($event['image_evenement']); ?>">
+                        <input type="hidden" name="current_image" value="<?php echo htmlspecialchars($current_image ?? ''); ?>">
                     <?php endif; ?>
                     
                     <div class="mb-4">
                         <label for="titre" class="block font-medium mb-1">Title*</label>
-                        <input type="text" id="titre" name="titre" value="<?php echo htmlspecialchars($event['titre']); ?>" 
+                        <input type="text" id="titre" name="titre" value="<?php echo htmlspecialchars($event['titre'] ?? ''); ?>" 
                                class="w-full p-2 border border-gray-300 rounded" required>
                     </div>
                     
                     <div class="mb-4">
                         <label for="description" class="block font-medium mb-1">Description*</label>
                         <textarea id="description" name="description" 
-                                  class="w-full p-2 border border-gray-300 rounded h-24" required><?php echo htmlspecialchars($event['description']); ?></textarea>
+                                  class="w-full p-2 border border-gray-300 rounded h-24" required><?php echo htmlspecialchars($event['description'] ?? ''); ?></textarea>
                     </div>
                     
                     <div class="mb-4">
                         <label for="date_debut" class="block font-medium mb-1">Start Date*</label>
-                        <input type="date" id="date_debut" name="date_debut" value="<?php echo htmlspecialchars($event['date_debut']); ?>" 
+                        <input type="date" id="date_debut" name="date_debut" value="<?php echo htmlspecialchars($event['date_debut'] ?? ''); ?>" 
                                class="w-full p-2 border border-gray-300 rounded" required>
                     </div>
                     
                     <div class="mb-4">
                         <label for="date_fin" class="block font-medium mb-1">End Date*</label>
-                        <input type="date" id="date_fin" name="date_fin" value="<?php echo htmlspecialchars($event['date_fin']); ?>" 
+                        <input type="date" id="date_fin" name="date_fin" value="<?php echo htmlspecialchars($event['date_fin'] ?? ''); ?>" 
                                class="w-full p-2 border border-gray-300 rounded" required>
                     </div>
                     
                     <div class="mb-4">
                         <label for="lieu" class="block font-medium mb-1">Location*</label>
-                        <input type="text" id="lieu" name="lieu" value="<?php echo htmlspecialchars($event['lieu']); ?>" 
+                        <input type="text" id="lieu" name="lieu" value="<?php echo htmlspecialchars($event['lieu'] ?? ''); ?>" 
                                class="w-full p-2 border border-gray-300 rounded" required>
                     </div>
                     
                     <div class="mb-4">
                         <label for="capacite" class="block font-medium mb-1">Capacity*</label>
-                        <input type="number" id="capacite" name="capacite" value="<?php echo htmlspecialchars($event['capacite']); ?>" 
+                        <input type="number" id="capacite" name="capacite" value="<?php echo htmlspecialchars($event['capacite'] ?? ''); ?>" 
                                class="w-full p-2 border border-gray-300 rounded" required min="1">
                     </div>
                     
@@ -242,9 +245,9 @@ if (isset($_GET['edit'])) {
                         <label for="image_evenement" class="block font-medium mb-1">Event Image</label>
                         <input type="file" id="image_evenement" name="image_evenement" accept="image/*" 
                                class="w-full p-2 border border-gray-300 rounded">
-                        <?php if ($edit_mode && !empty($event['image_evenement'])): ?>
+                        <?php if ($edit_mode && !empty($current_image)): ?>
                             <div class="mt-2">
-                                <img src="<?php echo htmlspecialchars($event['image_evenement']); ?>" class="max-w-[200px] max-h-[150px]">
+                                <img src="<?php echo htmlspecialchars($current_image); ?>" class="max-w-[200px] max-h-[150px]">
                                 <p class="text-sm text-gray-500">Current image</p>
                             </div>
                         <?php endif; ?>
@@ -255,12 +258,12 @@ if (isset($_GET['edit'])) {
                     </button>
                     
                     <?php if ($edit_mode): ?>
-                        <button type="submit" name="cancel" 
+                        <button type="submit" name="delete" 
                                 class="ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                                onclick="return confirm('Are you sure you want to cancel this event?')">
-                            Cancel Event
+                                onclick="return confirm('Are you sure you want to delete this event?')">
+                            Delete Event
                         </button>
-                        <a href="events-list.php" class="ml-2 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500">Back</a>
+                        <a href="events-list.php" class="ml-2 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500">Cancel</a>
                     <?php endif; ?>
                 </form>
             </div>

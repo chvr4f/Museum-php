@@ -11,78 +11,113 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 // Initialize variables
 $success = $error = '';
 $employee = [
+  'id' => '',
   'username' => '',
   'email' => '',
   'role' => 'staff'
 ];
 $edit_mode = false;
 
+// Check if we're editing an existing employee
+if (isset($_GET['edit'])) {
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM employe WHERE id = ?");
+        $stmt->execute([$_GET['edit']]);
+        $employee = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($employee) {
+            $edit_mode = true;
+        } else {
+            $_SESSION['error'] = "Employee not found";
+            header('Location: employee-list.php');
+            exit();
+        }
+    } catch (PDOException $e) {
+        $_SESSION['error'] = "Error fetching employee: " . $e->getMessage();
+        header('Location: employee-list.php');
+        exit();
+    }
+}
+
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  try {
-    if (isset($_POST['delete_employee'])) {
-      // Prevent admin from deleting themselves
-      if ($_POST['employee_id'] != $_SESSION['user_id']) {
-        $stmt = $pdo->prepare("DELETE FROM employe WHERE id = ?");
-        $stmt->execute([$_POST['employee_id']]);
-        $success = "Employee deleted successfully!";
-      } else {
-        $error = "You cannot delete your own account!";
-      }
-    } elseif (isset($_POST['update_employee'])) {
-      // Update employee - password is optional
-      if (!empty($_POST['password'])) {
-        $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $stmt = $pdo->prepare("UPDATE employe SET 
-                  username = ?, email = ?, role = ?, password = ?
-                  WHERE id = ?");
-        $stmt->execute([
-          $_POST['username'],
-          $_POST['email'],
-          $_POST['role'],
-          $hashed_password,
-          $_POST['employee_id']
-        ]);
-      } else {
-        $stmt = $pdo->prepare("UPDATE employe SET 
-                  username = ?, email = ?, role = ?
-                  WHERE id = ?");
-        $stmt->execute([
-          $_POST['username'],
-          $_POST['email'],
-          $_POST['role'],
-          $_POST['employee_id']
-        ]);
-      }
-      $success = "Employee updated successfully!";
-    } elseif (isset($_POST['add_employee'])) {
-      // Add new employee with provided password
-      if (empty($_POST['password'])) {
-        $error = "Password is required when adding a new employee";
-      } else {
-        $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $stmt = $pdo->prepare("INSERT INTO employe 
-                  (username, email, password, role) 
-                  VALUES (?, ?, ?, ?)");
-        $stmt->execute([
-          $_POST['username'],
-          $_POST['email'],
-          $hashed_password,
-          $_POST['role']
-        ]);
-        $success = "Employee added successfully!";
-      }
+    try {
+        if (isset($_POST['delete_employee'])) {
+            // Prevent admin from deleting themselves
+            if ($_POST['employee_id'] != $_SESSION['user_id']) {
+                $stmt = $pdo->prepare("DELETE FROM employe WHERE id = ?");
+                $stmt->execute([$_POST['employee_id']]);
+                $_SESSION['success'] = "Employee deleted successfully!";
+            } else {
+                $_SESSION['error'] = "You cannot delete your own account!";
+            }
+            header('Location: employee-list.php');
+            exit();
+        } elseif (isset($_POST['update_employee'])) {
+            // Update employee - password is optional
+            if (!empty($_POST['password'])) {
+                $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("UPDATE employe SET 
+                          username = ?, email = ?, role = ?, password = ?
+                          WHERE id = ?");
+                $stmt->execute([
+                    $_POST['username'],
+                    $_POST['email'],
+                    $_POST['role'],
+                    $hashed_password,
+                    $_POST['employee_id']
+                ]);
+            } else {
+                $stmt = $pdo->prepare("UPDATE employe SET 
+                          username = ?, email = ?, role = ?
+                          WHERE id = ?");
+                $stmt->execute([
+                    $_POST['username'],
+                    $_POST['email'],
+                    $_POST['role'],
+                    $_POST['employee_id']
+                ]);
+            }
+            $_SESSION['success'] = "Employee updated successfully!";
+            header('Location: employee-list.php');
+            exit();
+        } elseif (isset($_POST['add_employee'])) {
+            // Add new employee with provided password
+            if (empty($_POST['password'])) {
+                $error = "Password is required when adding a new employee";
+            } else {
+                $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("INSERT INTO employe 
+                          (username, email, password, role) 
+                          VALUES (?, ?, ?, ?)");
+                $stmt->execute([
+                    $_POST['username'],
+                    $_POST['email'],
+                    $hashed_password,
+                    $_POST['role']
+                ]);
+                $_SESSION['success'] = "Employee added successfully!";
+                header('Location: employee-list.php');
+                exit();
+            }
+        }
+    } catch (PDOException $e) {
+        $error = "Database error: " . $e->getMessage();
     }
-  } catch (PDOException $e) {
-    $error = "Database error: " . $e->getMessage();
-  }
+}
+
+// Display messages from session
+if (isset($_SESSION['success'])) {
+    $success = $_SESSION['success'];
+    unset($_SESSION['success']);
+}
+if (isset($_SESSION['error'])) {
+    $error = $_SESSION['error'];
+    unset($_SESSION['error']);
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -128,12 +163,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   </script>
 </head>
-
 <body class="bg-gray-50 font-sans antialiased">
   <div class="min-h-screen flex">
     <!-- Sidebar -->
     <?php include 'sidebar.php'; ?>
-
 
     <!-- Main Content -->
     <div class="flex-1 p-5">
@@ -141,7 +174,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h2 class="text-xl font-bold text-gray-800 mb-4">
           <?php echo $edit_mode ? 'Edit Employee' : 'Add New Employee'; ?>
         </h2>
-        <form action="admin-dashboard.php" method="POST">
+        
+        <?php if (!empty($success)): ?>
+          <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-5">
+            <?php echo htmlspecialchars($success); ?>
+          </div>
+        <?php endif; ?>
+        
+        <?php if (!empty($error)): ?>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5">
+            <?php echo htmlspecialchars($error); ?>
+          </div>
+        <?php endif; ?>
+        
+        <form action="employee-form.php<?php echo $edit_mode ? '?edit='.$employee['id'] : ''; ?>" method="POST">
           <?php if ($edit_mode): ?>
             <input type="hidden" name="employee_id" value="<?php echo $employee['id']; ?>">
             <input type="hidden" name="update_employee" value="1">
@@ -190,18 +236,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
               <?php echo $edit_mode ? 'Update Employee' : 'Add Employee'; ?>
             </button>
+            <a href="employee-list.php" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+              Cancel
+            </a>
             <?php if ($edit_mode): ?>
-              <a href="admin-dashboard.php" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                Cancel
-              </a>
+              <button type="submit" name="delete_employee" value="1"
+                class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ml-auto"
+                onclick="return confirm('Are you sure you want to delete this employee?')">
+                Delete Employee
+              </button>
             <?php endif; ?>
           </div>
         </form>
       </div>
-
     </div>
-
   </div>
 </body>
-
 </html>

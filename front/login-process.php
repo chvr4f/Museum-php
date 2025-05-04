@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     header('Location: collection-list.php');
                     break;
                 case 'visiteurs':
-                    header('Location: Evisiteurs-dashboard.php');
+                    header('Location: visitors-list.php');
                     break;
                 case 'evenements':
                     header('Location: events-list.php');

@@ -8,6 +8,26 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
   exit();
 }
 
+// Handle employee deletion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_employee'])) {
+    try {
+        // Prevent admin from deleting themselves
+        if ($_POST['employee_id'] != $_SESSION['user_id']) {
+            $stmt = $pdo->prepare("DELETE FROM employe WHERE id = ?");
+            $stmt->execute([$_POST['employee_id']]);
+            $_SESSION['success'] = "Employee deleted successfully!";
+        } else {
+            $_SESSION['error'] = "You cannot delete your own account!";
+        }
+        header('Location: employee-list.php');
+        exit();
+    } catch (PDOException $e) {
+        $_SESSION['error'] = "Error deleting employee: " . $e->getMessage();
+        header('Location: employee-list.php');
+        exit();
+    }
+}
+
 // Fetch all employees
 $employees = [];
 try {
@@ -16,11 +36,16 @@ try {
 } catch (PDOException $e) {
   $error = "Error fetching employees: " . $e->getMessage();
 }
+
+// Display messages from session
+$success = $_SESSION['success'] ?? '';
+$error = $_SESSION['error'] ?? '';
+unset($_SESSION['success']);
+unset($_SESSION['error']);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,12 +91,10 @@ try {
     }
   </script>
 </head>
-
 <body class="bg-gray-50 font-sans antialiased">
   <div class="min-h-screen flex">
     <!-- Sidebar -->
     <?php include 'sidebar.php'; ?>
-
 
     <!-- Main Content -->
     <div class="flex-1 p-5">
@@ -81,9 +104,26 @@ try {
           Add New Employee
         </a>
       </div>
+      
+      <?php if (!empty($success)): ?>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-5">
+          <?php echo htmlspecialchars($success); ?>
+        </div>
+      <?php endif; ?>
+      
+      <?php if (!empty($error)): ?>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5">
+          <?php echo htmlspecialchars($error); ?>
+        </div>
+      <?php endif; ?>
+      
       <div class="space-y-6">
         <?php if (empty($employees)): ?>
-          <p class="text-gray-600">No employees found.</p>
+          <!-- No Employees Message -->
+          <div class="bg-white rounded-lg shadow-sm p-8 text-center">
+            <p class="text-gray-500 text-lg">There are no employees yet.</p>
+            <p class="text-gray-400 mt-2">Click "Add New Employee" to get started.</p>
+          </div>
         <?php else: ?>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($employees as $emp): ?>
@@ -97,16 +137,16 @@ try {
                   <div class="text-gray-600 text-sm mb-2"><?php echo htmlspecialchars($emp['email']); ?></div>
 
                   <div class="text-xs px-2 py-1 rounded-full inline-block mb-3 
-            <?php echo 'bg-' . $emp['role'] . '-bg text-' . $emp['role'] . '-text'; ?>">
+                    <?php echo 'bg-' . $emp['role'] . '-bg text-' . $emp['role'] . '-text'; ?>">
                     <?php echo htmlspecialchars(ucfirst($emp['role'])); ?>
                   </div>
 
                   <div class="flex space-x-2">
-                    <a href="admin-dashboard.php?edit_employee=<?php echo $emp['id']; ?>"
+                    <a href="employee-form.php?edit=<?php echo $emp['id']; ?>"
                       class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                       Edit
                     </a>
-                    <form action="admin-dashboard.php" method="POST" class="inline">
+                    <form action="" method="POST" class="inline">
                       <input type="hidden" name="employee_id" value="<?php echo $emp['id']; ?>">
                       <input type="hidden" name="delete_employee" value="1">
                       <button type="submit"
@@ -123,8 +163,6 @@ try {
         <?php endif; ?>
       </div>
     </div>
-
   </div>
 </body>
-
 </html>

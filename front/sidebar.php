@@ -26,6 +26,14 @@ $role = $_SESSION['role'];
       </a>
     <?php endif; ?>
 
+<!-- Employees -->
+<?php if ($role === 'admin'): ?>
+      <a href="employee-list.php" class="flex items-center space-x-3 p-2 rounded-lg text-gray-300 hover:bg-dark-800 hover:text-white">
+        <i class="fas fa-users-cog w-5 text-center"></i>
+        <span>Employees</span>
+      </a>
+    <?php endif; ?>
+
     <!-- Collections -->
     <?php if ($role === 'admin' || $role === 'oeuvres'): ?>
       <a href="collection-list.php" class="flex items-center space-x-3 p-2 rounded-lg text-gray-300 hover:bg-dark-800 hover:text-white">
@@ -42,11 +50,11 @@ $role = $_SESSION['role'];
       </a>
     <?php endif; ?>
 
-    <!-- Employees -->
-    <?php if ($role === 'admin'): ?>
-      <a href="employee-list.php" class="flex items-center space-x-3 p-2 rounded-lg text-gray-300 hover:bg-dark-800 hover:text-white">
-        <i class="fas fa-users-cog w-5 text-center"></i>
-        <span>Employees</span>
+      <!-- visiteurs -->
+    <?php if ($role === 'admin' || $role === 'visiteurs'): ?>
+      <a href="visitors-list.php" class="flex items-center space-x-3 p-2 rounded-lg text-gray-300 hover:bg-dark-800 hover:text-white">
+        <i class="fas fa-box-open w-5 text-center"></i>
+        <span>visitors</span>
       </a>
     <?php endif; ?>
 
