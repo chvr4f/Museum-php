@@ -1,8 +1,4 @@
-
 <?php
-session_start();
-require 'config.php';
-
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
     $rating = filter_input(INPUT_POST, 'rating', FILTER_SANITIZE_NUMBER_INT);

@@ -16,13 +16,9 @@ try {
     if ($_SESSION['role'] === 'admin') {
         $stmt = $pdo->query("SELECT * FROM visiteur ORDER BY id DESC");
     } else {
-        // For visiteurs role, show all visitors (or filter if needed)
         $stmt = $pdo->query("SELECT * FROM visiteur ORDER BY id DESC");
-        // If you want to filter by employee who created them:
-        // $stmt = $pdo->prepare("SELECT * FROM visiteur WHERE id_employe = ? ORDER BY id DESC");
-        // $stmt->execute([$_SESSION['user_id']]);
     }
-    
+
     $visitors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $error = "Error fetching visitors: " . $e->getMessage();
@@ -91,56 +87,81 @@ try {
 
       <?php if (!empty($error)): ?>
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5">
-          <?php echo $error; ?>
+          <?= $error ?>
         </div>
       <?php endif; ?>
 
       <div class="space-y-6">
-  <?php if (!empty($visitors)): ?>
-    <!-- Visitors Grid -->
-    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-      <?php foreach ($visitors as $vis): ?>
-        <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-          <div class="p-4">
-            <h3 class="text-lg font-medium text-gray-900">
-              <?php echo htmlspecialchars($vis['prenom'] . ' ' . $vis['nom']); ?>
-            </h3>
-            <p class="mt-1 text-sm text-gray-500"><?php echo htmlspecialchars($vis['email']); ?></p>
-            <div class="mt-2">
-              <span class="inline-block px-2 py-1 text-xs rounded-full 
-                <?php echo $vis['type_visiteur'] === 'regular' ? 'bg-blue-100 text-blue-800' : ''; ?>
-                <?php echo $vis['type_visiteur'] === 'vip' ? 'bg-green-100 text-green-800' : ''; ?>
-                <?php echo $vis['type_visiteur'] === 'staff' ? 'bg-purple-100 text-purple-800' : ''; ?>">
-                <?php echo htmlspecialchars(ucfirst($vis['type_visiteur'])); ?>
-              </span>
-            </div>
-            <div class="mt-4 flex space-x-2">
-              <a href="visitors-form.php?edit=<?php echo $vis['id']; ?>"
-                class="flex-1 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-md hover:bg-indigo-100 text-center">
-                Edit
-              </a>
-              <form action="visitors-form.php" method="POST" class="inline">
-                <input type="hidden" name="visitor_id" value="<?php echo $vis['id']; ?>">
-                <input type="hidden" name="delete" value="1">
-                <button type="submit"
-                  class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50 rounded-md hover:bg-gray-100"
-                  onclick="return confirm('Are you sure you want to delete this visitor?')">
-                  Delete
-                </button>
-              </form>
-            </div>
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="p-4 border-b border-gray-100">
+            <h3 class="text-lg font-semibold text-gray-800">Registered Visitors</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="bg-gray-50">
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <?php if (!empty($visitors)): ?>
+                  <?php foreach ($visitors as $vis): ?>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                          <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                            <span class="text-sm font-medium text-indigo-600">
+                              <?= strtoupper(substr($vis['prenom'], 0, 1)) ?>
+                            </span>
+                          </div>
+                          <div class="ml-3">
+                            <div class="text-sm font-medium text-gray-900">
+                              <?= htmlspecialchars($vis['prenom'] . ' ' . $vis['nom']) ?>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900"><?= htmlspecialchars($vis['email']) ?></div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">
+                          <?= date('M j, Y', strtotime($vis['created_at'] ?? date('Y-m-d'))) ?>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="
+                          px-2 py-1 text-xs rounded-full
+                          <?= $vis['type_visiteur'] === 'regular' ? 'bg-blue-100 text-blue-800' : '' ?>
+                          <?= $vis['type_visiteur'] === 'vip' ? 'bg-green-100 text-green-800' : '' ?>
+                          <?= $vis['type_visiteur'] === 'staff' ? 'bg-purple-100 text-purple-800' : '' ?>">
+                          <?= ucfirst(htmlspecialchars($vis['type_visiteur'])) ?>
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                        <a href="visitors-form.php?edit=<?= $vis['id'] ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                        <form action="visitors-form.php" method="POST" class="inline">
+                          <input type="hidden" name="visitor_id" value="<?= $vis['id'] ?>">
+                          <input type="hidden" name="delete" value="1">
+                          <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete this visitor?')">Delete</button>
+                        </form>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                  <tr>
+                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">No visitors found.</td>
+                  </tr>
+                <?php endif; ?>
+              </tbody>
+            </table>
           </div>
         </div>
-      <?php endforeach; ?>
-    </div>
-  <?php else: ?>
-    <!-- No Visitors Message -->
-    <div class="bg-white rounded-lg shadow-sm p-8 text-center">
-      <p class="text-gray-500 text-lg">There are no visitors yet.</p>
-      <p class="text-gray-400 mt-2">Click "Add New Visitor" to get started.</p>
-    </div>
-  <?php endif; ?>
-</div>
+      </div>
     </div>
   </div>
 </body>
