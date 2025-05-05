@@ -8,13 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     try {
-        // Check if the identifier exists in the database
+        // First check the employe table
         $stmt = $pdo->prepare("SELECT * FROM employe WHERE username = ?");
         $stmt->execute([$identifier]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
-            // Login successful
+            // Employee login successful
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
@@ -34,14 +34,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     header('Location: events-list.php');
                     break;
                 default:
-                    // Default redirect if role doesn't match
                     header('Location: login.php?error=no_dashboard');
             }
             exit();
         } else {
-            // Login failed
-            header('Location: login.php?error=invalid_credentials');
-            exit();
+            // If not found in employe table, check visiteur table
+            $stmt = $pdo->prepare("SELECT * FROM visiteur WHERE email = ?");
+            $stmt->execute([$identifier]);
+            $visitor = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($visitor && password_verify($password, $visitor['password'])) {
+                // Visitor login successful
+                $_SESSION['user_id'] = $visitor['id'];
+                $_SESSION['email'] = $visitor['email'];
+                $_SESSION['role'] = 'visiteur';
+                $_SESSION['nom'] = $visitor['nom'];
+                $_SESSION['prenom'] = $visitor['prenom'];
+
+                header('Location: main.php');
+                exit();
+            } else {
+                // Login failed for both tables
+                header('Location: login.php?error=invalid_credentials');
+                exit();
+            }
         }
     } catch (PDOException $e) {
         // Database error

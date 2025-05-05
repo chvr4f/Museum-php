@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS utilisateur;
 CREATE TABLE utilisateur (
     id INT AUTO_INCREMENT PRIMARY KEY,  
     type_utilisateur VARCHAR(20) NOT NULL,
-    mot_de_passe VARCHAR(500) NOT NULL,
+    password VARCHAR(500) NOT NULL,
     role VARCHAR(30) NOT NULL
 );
 
@@ -21,7 +21,7 @@ CREATE TABLE utilisateur (
 CREATE TABLE employe (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,   
-    mot_de_passe VARCHAR(500) NOT NULL,
+    password VARCHAR(500) NOT NULL,
     role VARCHAR(100) NOT NULL,
     date_embauche TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -30,7 +30,7 @@ CREATE TABLE employe (
 CREATE TABLE visiteur (
     id INT AUTO_INCREMENT PRIMARY KEY, 
     email VARCHAR(255) NOT NULL,
-    mot_de_passe VARCHAR(500) NOT NULL,
+    password VARCHAR(500) NOT NULL,
     tel VARCHAR(20),
     age INT NOT NULL,
     nom VARCHAR(100),
@@ -117,7 +117,7 @@ CREATE TABLE avis (
     )
 );
 
-INSERT INTO employe (username, mot_de_passe, role) VALUES ('taha', '123123', 'oeuvres');
-INSERT INTO employe (username, mot_de_passe, role) VALUES ('charaf', '123123', 'admin');
-INSERT INTO employe (username, mot_de_passe, role) VALUES ('hajar', '123123', 'evenements');
-INSERT INTO employe (username, mot_de_passe, role) VALUES ('ouissal', '123123', 'visiteurs');
+INSERT INTO employe (username, password, role) VALUES ('taha', '123123', 'oeuvres');
+INSERT INTO employe (username, password, role) VALUES ('charaf', '123123', 'admin');
+INSERT INTO employe (username, password, role) VALUES ('hajar', '123123', 'evenements');
+INSERT INTO employe (username, password, role) VALUES ('ouissal', '123123', 'visiteurs');
