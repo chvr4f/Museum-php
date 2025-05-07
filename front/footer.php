@@ -34,7 +34,7 @@
             <ul class="contact-list">
                 <li><i class='bx bxs-map'></i>25 Oujda City, 60000</li>
                 <li><i class='bx bxs-phone'></i>+212 66648 74442</li>
-                <li><i class='bx bxs-mail-send'></i>ZertCrew@shop.com</li>
+                <li><i class='bx bxs-mail-send'></i>TimeTravel@gmail.com</li>
             </ul>
         </div>
     </div>

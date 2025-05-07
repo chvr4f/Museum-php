@@ -73,7 +73,7 @@ $visitorName = $_SESSION['prenom'] ?? 'Visitor';
           
             <div class="buttons">
                 <button><a href="boutique.html" class="header-button">Online Boutique</a></button>
-                <button><a href="tickets.html" class="header-button">Tickets</a></button>
+                <button><a href="tickets.php" class="header-button">Tickets</a></button>
                 <?php if($isVisitor): ?>
                 <div class="visitor-container">
                     <div class="visitor-name">
