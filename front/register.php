@@ -281,7 +281,17 @@ session_start();
                                    value="<?php echo isset($_SESSION['register_data']['fullname']) ? htmlspecialchars($_SESSION['register_data']['fullname']) : ''; ?>">
                         </div>
                     </div>
-                    
+                    <!-- Add this after the confirm password field -->
+
+
+<div class="form-group">
+    <label for="age">Age*</label>
+    <div class="input-with-icon">
+        <i class="fas fa-calendar-alt"></i>
+        <input type="number" id="age" name="age" min="1" max="120" required
+               value="<?php echo isset($_SESSION['register_data']['age']) ? htmlspecialchars($_SESSION['register_data']['age']) : ''; ?>">
+    </div>
+</div>
                     <div class="form-group">
                         <label for="email">Email Address*</label>
                         <div class="input-with-icon">
@@ -290,6 +300,14 @@ session_start();
                                    value="<?php echo isset($_SESSION['register_data']['email']) ? htmlspecialchars($_SESSION['register_data']['email']) : ''; ?>">
                         </div>
                     </div>
+                    <div class="form-group">
+    <label for="phone">Phone Number</label>
+    <div class="input-with-icon">
+        <i class="fas fa-phone"></i>
+        <input type="tel" id="phone" name="phone" 
+               value="<?php echo isset($_SESSION['register_data']['phone']) ? htmlspecialchars($_SESSION['register_data']['phone']) : ''; ?>">
+    </div>
+</div>  
                     
                     <div class="form-group">
                         <label for="password">Create Password*</label>

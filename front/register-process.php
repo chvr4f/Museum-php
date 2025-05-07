@@ -12,12 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm-password'];
+    $phone = trim($_POST['phone'] ?? '');
+    $age = (int)($_POST['age'] ?? 0);
     $terms = isset($_POST['terms']) ? true : false;
 
     // Store form data for repopulation
     $formData = [
         'fullname' => $fullname,
         'email' => $email,
+        'phone' => $phone,
+        'age' => $age,
         'terms' => $terms
     ];
 
@@ -46,6 +50,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Passwords do not match";
     }
 
+    // Validate phone (optional field)
+    if (!empty($phone) && !preg_match('/^[0-9\-\+\s\(\)]{10,20}$/', $phone)) {
+        $errors[] = "Invalid phone number format";
+    }
+
+    // Validate age
+    if (empty($age)) {
+        $errors[] = "Age is required";
+    } elseif ($age < 1 || $age > 120) {
+        $errors[] = "Age must be between 1 and 120";
+    }
+
     // Validate terms
     if (!$terms) {
         $errors[] = "You must agree to the terms and conditions";
@@ -66,11 +82,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         try {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO visiteur 
-                (email, password, nom, prenom, type_visiteur, age) 
-                VALUES (?, ?, ?, ?, 'regular', 0)");
             
-            $stmt->execute([$email, $hashed_password, $nom, $prenom]);
+            // Modified query - removed type_visiteur
+            $stmt = $pdo->prepare("INSERT INTO visiteur 
+                (email, password, nom, prenom, tel, age) 
+                VALUES (?, ?, ?, ?, ?, ?)");
+            
+            $stmt->execute([
+                $email, 
+                $hashed_password, 
+                $nom, 
+                $prenom,
+                $phone,
+                $age
+            ]);
             
             // Clear form data
             $formData = [];
