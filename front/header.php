@@ -12,6 +12,7 @@ $visitorName = $_SESSION['prenom'] ?? 'Visitor';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="styles.css">
     <title>Document</title>
 </head>
 <body>
@@ -53,6 +54,7 @@ $visitorName = $_SESSION['prenom'] ?? 'Visitor';
         </div>
         <style>
         /* Add this style for the visitor name display */
+        
         .visitor-name {
             display: flex;
             align-items: center;

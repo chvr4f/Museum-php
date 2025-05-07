@@ -112,6 +112,7 @@ require 'config.php';
     max-width: 700px;
     margin: 0 auto 2rem;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    margin-bottom: 90px;
 }
 
 /* Ticket Types Section */
@@ -346,28 +347,7 @@ require 'config.php';
     </style>
 </head>
 <body>
-    <header>
-        <div class="first-header">
-            <div class="search-bar">
-                <input type="text" placeholder="Search...">
-            </div>
-            <div class="logo"><a href="main.php">Time Travel</a></div>
-            <div class="buttons">
-                <button><a href="boutique.html" class="header-button">Online Boutique</a></button>
-                <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'visiteur'): ?>
-                    <div class="visitor-name">
-                        <i class='bx bx-user'></i>
-                        <span><?php echo htmlspecialchars($_SESSION['prenom'] ?? 'Visitor'); ?></span>
-                    </div>
-                    <a href="logout.php" class="logout-button">
-                        <i class='bx bx-log-out'></i>
-                    </a>
-                <?php else: ?>
-                    <button><a href="login.php" class="header-button">Login</a></button>
-                <?php endif; ?>
-            </div>
-        </div>
-    </header>
+<?php include 'header.php'; ?>
 
     <main>
         <section class="tickets-hero">
