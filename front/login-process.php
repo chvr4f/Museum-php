@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($visitor && password_verify($password, $visitor['password'])) {
                 // Visitor login successful
-                $_SESSION['user_id'] = $visitor['id'];
+                $_SESSION['id_visiteur'] = $visitor['id'];
                 $_SESSION['email'] = $visitor['email'];
                 $_SESSION['role'] = 'visiteur';
                 $_SESSION['nom'] = $visitor['nom'];

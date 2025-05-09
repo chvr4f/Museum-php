@@ -42,6 +42,15 @@ $role = $_SESSION['role'];
       </a>
     <?php endif; ?>
 
+
+    <!-- articles -->
+
+    <?php if ($role === 'admin'): ?>
+      <a href="article-list.php" class="flex items-center space-x-3 p-2 rounded-lg text-gray-300 hover:bg-dark-800 hover:text-white">
+        <i class="fas fa-box-open w-5 text-center"></i>
+        <span>articles</span>
+      </a>
+    <?php endif; ?>
     <!-- Events -->
     <?php if ($role === 'admin' || $role === 'evenements'): ?>
       <a href="events-list.php" class="flex items-center space-x-3 p-2 rounded-lg text-gray-300 hover:bg-dark-800 hover:text-white">

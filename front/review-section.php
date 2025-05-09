@@ -1,12 +1,36 @@
+<?php require_once 'config.php'; ?>
+
+<?php
+try {
+    $stmt = $pdo->query("SELECT a.*, v.prenom, v.nom FROM avis a JOIN visiteur v ON a.id_visiteur = v.id ORDER BY date_avis DESC");
+    $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $reviews = [];
+}
+
+
+// Fetch all reviews
+try {
+    $stmt = $pdo->prepare("
+        SELECT a.*, v.prenom, v.nom 
+        FROM avis a 
+        JOIN visiteur v ON a.id_visiteur = v.id 
+        ORDER BY date_avis DESC
+    ");
+    $stmt->execute();
+    $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $reviews = [];
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Reviews</title>
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons @2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         /* Modern Review Section */
         .reviews-container {
@@ -128,24 +152,6 @@
             resize: vertical;
         }
 
-        .submit-btn {
-            background: black;
-            color: white;
-            border: none;
-            padding: 0.8rem;
-            font-size: 0.95rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-weight: 500;
-            margin-top: 0.5rem;
-            width: 100%;
-        }
-
-        .submit-btn:hover {
-            background: white;
-
-        }
 
         /* Scrollable Reviews */
         .review-cards {
@@ -190,7 +196,7 @@
         }
 
         .review-card {
-            background: white;
+            background:#e1ebe2 ;
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
             padding: 1.2rem;
@@ -240,6 +246,21 @@
             color: #777;
             font-size: 0.8rem;
         }
+        .reviewer-details {
+    margin-top: 0.5rem;
+}
+
+.reviewer-details h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.reviewer-details p {
+    margin: 0.2rem 0 0;
+    font-size: 0.8rem;
+    color: #777;
+}
 
         /* Responsive adjustments */
         @media (max-width: 800px) {
@@ -286,128 +307,81 @@
         }
     </style>
 </head>
-
 <body>
-    <div class="reviews-container">
-        <div class="section-title">
-            <h2>Customer Reviews</h2>
-            <p>See what our customers say about their experience</p>
+
+<div class="reviews-container">
+    <div class="section-title">
+        <h2>Customer Reviews</h2>
+        <p>See what our customers say about their experience</p>
+    </div>
+
+    <div class="reviews-layout">
+        <!-- Left Column - Review Form -->
+        <div class="review-form-column">
+            <div class="add-review">
+                <h3>Share Your Experience</h3>
+                <?php if (isset($_SESSION['message'])): ?>
+                    <div class="alert-success"><?= $_SESSION['message']; unset($_SESSION['message']); ?></div>
+                <?php elseif (isset($_SESSION['error'])): ?>
+                    <div class="alert-error"><?= $_SESSION['error']; unset($_SESSION['error']); ?></div>
+                <?php endif; ?>
+                <form id="reviewForm" class="review-form" method="post" action="submit-review.php">
+                    <div class="form-group">
+                        <label>Your Rating:</label>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="rating" value="5" required>
+                            <label for="star5"><i class='bx bxs-star'></i></label>
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label for="star4"><i class='bx bxs-star'></i></label>
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label for="star3"><i class='bx bxs-star'></i></label>
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label for="star2"><i class='bx bxs-star'></i></label>
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label for="star1"><i class='bx bxs-star'></i></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="review">Your Review:</label>
+                        <textarea id="review" name="review" required placeholder="Tell us about your experience..." class="form-control"></textarea>
+                    </div>
+                    <button type="submit" name="submit_review" class="submit-btn">Submit Review</button>
+                </form>
+            </div>
         </div>
 
-        <div class="reviews-layout">
-            <!-- Left Column - Review Form -->
-            <div class="review-form-column">
-                <div class="add-review">
-                    <h3>Share Your Experience</h3>
-                    <form id="reviewForm" class="review-form">
-                        <div class="form-group">
-                            <label>Your Rating:</label>
-                            <div class="star-rating">
-                                <input type="radio" id="star5" name="rating" value="5" required>
-                                <label for="star5" title="5 stars"><i class='bx bxs-star'></i></label>
-                                <input type="radio" id="star4" name="rating" value="4">
-                                <label for="star4" title="4 stars"><i class='bx bxs-star'></i></label>
-                                <input type="radio" id="star3" name="rating" value="3">
-                                <label for="star3" title="3 stars"><i class='bx bxs-star'></i></label>
-                                <input type="radio" id="star2" name="rating" value="2">
-                                <label for="star2" title="2 stars"><i class='bx bxs-star'></i></label>
-                                <input type="radio" id="star1" name="rating" value="1">
-                                <label for="star1" title="1 star"><i class='bx bxs-star'></i></label>
+        <!-- Right Column - Scrollable Reviews -->
+        <div class="reviews-column">
+            <div class="review-cards">
+                <?php if (!empty($reviews)): ?>
+                    <?php foreach ($reviews as $review): ?>
+                        <div class="review-card">
+                            <div class="review-stars">
+                                <?php
+                                    $fullStars = floor($review['notes']);
+                                    $halfStar = ($review['notes'] - $fullStars) >= 0.5;
+                                    for ($i = 0; $i < $fullStars; $i++) {
+                                        echo '<i class="bx bxs-star"></i>';
+                                    }
+                                    if ($halfStar) {
+                                        echo '<i class="bx bxs-star-half"></i>';
+                                    }
+                                ?>
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="review">Your Review:</label>
-                            <textarea id="review" name="review" required placeholder="Tell us about your experience..." class="form-control"></textarea>
-                        </div>
-
-                        <button type="submit" class="view-all-button">Submit Review</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Right Column - Scrollable Reviews -->
-            <div class="reviews-column">
-                <div class="review-cards">
-                    <!-- Review 1 -->
-                    <div class="review-card">
-                        <div class="review-stars">
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                        </div>
-                        <p class="review-text">"Amazing service! Product quality exceeded my expectations. Fast shipping and eco-friendly packaging."</p>
-                        <div class="reviewer-info">
-                            <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sarah Johnson" class="reviewer-avatar">
+                            <p class="review-text">"<?php echo nl2br(htmlspecialchars($review['commentaire'])); ?>"</p>
                             <div class="reviewer-details">
-                                <h4>Sarah Johnson</h4>
-                                <p>Verified • May 2023</p>
+                                <h4><?php echo htmlspecialchars($review['prenom'] . ' ' . $review['nom']); ?></h4>
+                                <p>Verified • <?php echo date('M Y', strtotime($review['date_avis'])); ?></p>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Review 2 -->
-                    <div class="review-card">
-                        <div class="review-stars">
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star-half'></i>
-                        </div>
-                        <p class="review-text">"Great experience overall. Product works as described. Responsive customer service."</p>
-                        <div class="reviewer-info">
-                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen" class="reviewer-avatar">
-                            <div class="reviewer-details">
-                                <h4>Michael Chen</h4>
-                                <p>Verified • Apr 2023</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Review 3 -->
-                    <div class="review-card">
-                        <div class="review-stars">
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                        </div>
-                        <p class="review-text">"Changed my routine completely. Outstanding quality worth every penny. Highly recommend!"</p>
-                        <div class="reviewer-info">
-                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Emily Rodriguez" class="reviewer-avatar">
-                            <div class="reviewer-details">
-                                <h4>Emily Rodriguez</h4>
-                                <p>Verified • Mar 2023</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Review 4 -->
-                    <div class="review-card">
-                        <div class="review-stars">
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                            <i class='bx bxs-star'></i>
-                        </div>
-                        <p class="review-text">"Third purchase and still impressed. Remarkable attention to detail. Committed to sustainability."</p>
-                        <div class="reviewer-info">
-                            <img src="https://randomuser.me/api/portraits/men/55.jpg" alt="David Wilson" class="reviewer-avatar">
-                            <div class="reviewer-details">
-                                <h4>David Wilson</h4>
-                                <p>Verified • Jun 2023</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No reviews yet.</p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
-</body>
+</div>
 
+</body>
 </html>

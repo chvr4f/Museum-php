@@ -5,7 +5,16 @@ session_start();
 // Check if visitor is logged in
 $isVisitor = isset($_SESSION['role']) && $_SESSION['role'] === 'visiteur';
 $visitorName = $_SESSION['prenom'] ?? 'Visitor';
-?>
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
+    $isVisitor = isset($_SESSION['role']) && $_SESSION['role'] === 'visiteur';
+    if (!$isVisitor) {
+        header("Location: login.php");
+        exit();
+    }
+}
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

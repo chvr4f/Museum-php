@@ -121,3 +121,7 @@ INSERT INTO employe (username, password, role) VALUES ('taha', '123123', 'oeuvre
 INSERT INTO employe (username, password, role) VALUES ('charaf', '123123', 'admin');
 INSERT INTO employe (username, password, role) VALUES ('hajar', '123123', 'evenements');
 INSERT INTO employe (username, password, role) VALUES ('ouissal', '123123', 'visiteurs');
+
+
+
+
