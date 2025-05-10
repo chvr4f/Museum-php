@@ -285,10 +285,10 @@ header {
             <div class="logo"><a href="main.html">Time Travel</a></div>
           
             <div class="buttons">
-                <button><a href="boutique.html" class="header-button">Online Boutique</a></button>
-                <button><a href="tickets.html" class="header-button">Tickets</a></button>
+                <button><a href="boutique.php" class="header-button">Online Boutique</a></button>
+                <button><a href="tickets.php" class="header-button">Tickets</a></button>
                 
-                <button><a href="login.html" class="header-button">Login</a></button>
+                <button><a href="login.php" class="header-button">Login</a></button>
 
                 <div class="cart-icon" id="cartIcon">
                     <i class='bx bx-cart'></i>
@@ -583,5 +583,6 @@ header {
             updateCartCount();
         });
     </script>
+ 
 </body>
 </html>

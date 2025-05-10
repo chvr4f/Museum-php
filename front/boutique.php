@@ -1,3 +1,16 @@
+<?php
+session_start();
+require 'config.php';
+
+// Fetch articles from database
+$articles = [];
+try {
+    $stmt = $pdo->query("SELECT * FROM article ORDER BY id DESC");
+    $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $error = "Error fetching articles: " . $e->getMessage();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -304,35 +317,32 @@
             <div class="search-bar">
                 <input type="text" placeholder="Search...">
             </div>
-            <div class="logo"><a href="main.html">Time Travel</a></div>
+            <div class="logo"><a href="main.php">Time Travel</a></div>
           
             <div class="buttons">
-                <button><a href="boutique.html" class="header-button">Online Boutique</a></button>
-                <button><a href="tickets.html" class="header-button">Tickets</a></button>
+                <button><a href="boutique.php" class="header-button">Online Boutique</a></button>
+                <button><a href="tickets.php" class="header-button">Tickets</a></button>
                 
-                <button><a href="login.html" class="header-button">Login</a></button>
+                <button><a href="login.php" class="header-button">Login</a></button>
 
                 <div class="cart-icon" id="cartIcon">
                     <i class='bx bx-cart'></i>
                     <span class="cart-count">0</span>
                     <div class="cart-dropdown" id="cartDropdown">
                         <div class="cart-items" id="cartItems">
-                            <!-- Cart items will be added here dynamically -->
                             <p class="empty-cart-message">Your cart is empty</p>
                         </div>
                         <div class="cart-total">
                             Total: $<span id="cartTotal">0.00</span>
                         </div>
                         <div class="cart-actions">
-                            <a href="cart.html" class="view-cart">View Cart</a>
-                            <a href="checkout.html" class="checkout">Checkout</a>
+                            <a href="cart.php" class="view-cart">View Cart</a>
+                            <a href="checkout.php" class="checkout">Checkout</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        
     </header>
 
     <main>
@@ -344,8 +354,8 @@
             </div>
         </section>
 
-         <!-- Boutique Categories -->
-         <section class="boutique-section">
+        <!-- Boutique Categories -->
+        <section class="boutique-section">
             <div class="boutique-categories">
                 <div class="boutique-category active">All Items</div>
                 <div class="boutique-category">Ancient Era</div>
@@ -361,176 +371,30 @@
             </div>
 
             <div class="boutique-grid">
-                <!-- Product 1 -->
-                <div class="boutique-item">
-                    <div class="boutique-item-img">
-                        <img src="pics/product1.jpg" alt="Roman Coin Replica">
-                    </div>
-                    <div class="boutique-item-content">
-                        <h3>Roman Coin Replica</h3>
-                        <p>Exact reproduction of a 1st century AD Roman denarius</p>
-                        <div class="boutique-item-price">$24.99</div>
-                        <button class="boutique-item-button add-to-cart" 
-                                data-id="1" 
-                                data-name="Roman Coin Replica" 
-                                data-price="24.99" 
-                                data-image="pics/product1.jpg">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Product 2 -->
-                <div class="boutique-item">
-                    <div class="boutique-item-img">
-                        <img src="pics/product2.jpg" alt="Medieval Illuminated Journal">
-                    </div>
-                    <div class="boutique-item-content">
-                        <h3>Medieval Illuminated Journal</h3>
-                        <p>Handcrafted notebook with gold-leaf designs</p>
-                        <div class="boutique-item-price">$19.99</div>
-                        <button class="boutique-item-button add-to-cart" 
-                                data-id="2" 
-                                data-name="Medieval Illuminated Journal" 
-                                data-price="19.99" 
-                                data-image="pics/product2.jpg">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="boutique-item">
-                    <div class="boutique-item-img">
-                        <img src="pics/product3.jpg" alt="Miniature Egyptian Sphinx">
-                    </div>
-                    <div class="boutique-item-content">
-                        <h3>Miniature Egyptian Sphinx</h3>
-                        <p>3D printed replica of the Great Sphinx of Giza</p>
-                        <div class="boutique-item-price">$32.50</div>
-                        <button class="boutique-item-button add-to-cart" 
-                                data-id="3" 
-                                data-name="Miniature Egyptian Sphinx" 
-                                data-price="32.50" 
-                                data-image="pics/product3.jpg">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Product 4 -->
-                <div class="boutique-item">
-                    <div class="boutique-item-img">
-                        <img src="pics/product4.jpg" alt="Steampunk Pocket Watch">
-                    </div>
-                    <div class="boutique-item-content">
-                        <h3>Steampunk Pocket Watch</h3>
-                        <p>Functional brass timepiece with antique finish</p>
-                        <div class="boutique-item-price">$49.99</div>
-                        <button class="boutique-item-button add-to-cart" 
-                                data-id="4" 
-                                data-name="Steampunk Pocket Watch" 
-                                data-price="49.99" 
-                                data-image="pics/product4.jpg">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Product 5 -->
-                <div class="boutique-item">
-                    <div class="boutique-item-img">
-                        <img src="pics/product5.jpg" alt="Space Exploration T-Shirt">
-                    </div>
-                    <div class="boutique-item-content">
-                        <h3>Space Exploration T-Shirt</h3>
-                        <p>100% cotton tee with vintage NASA design</p>
-                        <div class="boutique-item-price">$22.99</div>
-                        <button class="boutique-item-button add-to-cart" 
-                                data-id="5" 
-                                data-name="Space Exploration T-Shirt" 
-                                data-price="22.99" 
-                                data-image="pics/product5.jpg">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Product 6 -->
-                <div class="boutique-item">
-                    <div class="boutique-item-img">
-                        <img src="pics/product6.jpg" alt="Through the Ages Book">
-                    </div>
-                    <div class="boutique-item-content">
-                        <h3>"Through the Ages" Book</h3>
-                        <p>Illustrated history of human civilization</p>
-                        <div class="boutique-item-price">$29.95</div>
-                        <button class="boutique-item-button add-to-cart" 
-                                data-id="6" 
-                                data-name="Through the Ages Book" 
-                                data-price="29.95" 
-                                data-image="pics/product6.jpg">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Product 7 -->
-                <div class="boutique-item">
-                    <div class="boutique-item-img">
-                        <img src="pics/product7.jpg" alt="Through the Ages Book">
-                    </div>
-                    <div class="boutique-item-content">
-                        <h3>"Through the Ages" Book</h3>
-                        <p>Illustrated history of human civilization</p>
-                        <div class="boutique-item-price">$29.95</div>
-                        <button class="boutique-item-button add-to-cart" 
-                                data-id="7" 
-                                data-name="Through the Ages Book" 
-                                data-price="29.95" 
-                                data-image="pics/product7.jpg">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Product 8 -->
-                <div class="boutique-item">
-                    <div class="boutique-item-img">
-                        <img src="pics/product8.jpg" alt="T-Rex Skeleton Model">
-                    </div>
-                    <div class="boutique-item-content">
-                        <h3>T-Rex Skeleton Model</h3>
-                        <p>Build-your-own dinosaur skeleton kit</p>
-                        <div class="boutique-item-price">$18.99</div>
-                        <button class="boutique-item-button add-to-cart" 
-                                data-id="8" 
-                                data-name="T-Rex Skeleton Model" 
-                                data-price="18.99" 
-                                data-image="pics/product8.jpg">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Product 9 -->
-                <div class="boutique-item">
-                    <div class="boutique-item-img">
-                        <img src="pics/collection1.jpg" alt="Holographic Projector">
-                    </div>
-                    <div class="boutique-item-content">
-                        <h3>Holographic Projector</h3>
-                        <p>Create mini holograms with your smartphone</p>
-                        <div class="boutique-item-price">$39.99</div>
-                        <button class="boutique-item-button add-to-cart" 
-                                data-id="9" 
-                                data-name="Holographic Projector" 
-                                data-price="39.99" 
-                                data-image="pics/collection1.jpg">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
+                <?php if (!empty($articles)): ?>
+                    <?php foreach ($articles as $article): ?>
+                        <div class="boutique-item">
+                            <div class="boutique-item-img">
+                                <img src="<?php echo htmlspecialchars($article['image_article'] ?? 'pics/default-product.jpg'); ?>" 
+                                     alt="<?php echo htmlspecialchars($article['nom']); ?>">
+                            </div>
+                            <div class="boutique-item-content">
+                                <h3><?php echo htmlspecialchars($article['nom']); ?></h3>
+                                <p><?php echo htmlspecialchars($article['description']); ?></p>
+                                <div class="boutique-item-price">$<?php echo number_format($article['prix'], 2); ?></div>
+                                <button class="boutique-item-button add-to-cart" 
+                                        data-id="<?php echo htmlspecialchars($article['id']); ?>" 
+                                        data-name="<?php echo htmlspecialchars($article['nom']); ?>" 
+                                        data-price="<?php echo htmlspecialchars($article['prix']); ?>" 
+                                        data-image="<?php echo htmlspecialchars($article['image_article'] ?? 'pics/default-product.jpg'); ?>">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text-center">No products available in the boutique at this time.</p>
+                <?php endif; ?>
             </div>
         </section>
     </main>

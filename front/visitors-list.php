@@ -165,4 +165,42 @@ try {
     </div>
   </div>
 </body>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              600: '#2563eb',
+              700: '#1d4ed8',
+            },
+            dark: {
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            admin: {
+              bg: '#ffebee',
+              text: '#c62828'
+            },
+            oeuvres: {
+              bg: '#e3f2fd',
+              text: '#1565c0'
+            },
+            evenements: {
+              bg: '#e8f5e9',
+              text: '#2e7d32'
+            },
+            visiteurs: {
+              bg: '#fff3e0',
+              text: '#ef6c00'
+            },
+            staff: {
+              bg: '#f3e5f5',
+              text: '#7b1fa2'
+            }
+          }
+        }
+      }
+    }
+  </script>
 </html>
