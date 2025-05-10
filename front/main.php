@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
             <div class="logo"><a href="main.php">Time Travel</a></div>
           
             <div class="buttons">
-                <button><a href="boutique.html" class="header-button">Online Boutique</a></button>
+                <button><a href="boutique.php" class="header-button">Online Boutique</a></button>
                 <button><a href="tickets.php" class="header-button">Tickets</a></button>
                 <?php if($isVisitor): ?>
                 <div class="visitor-container">

@@ -80,6 +80,7 @@ CREATE TABLE article (
     prix DECIMAL(10,2) NOT NULL,
     quantite INT NOT NULL DEFAULT 0,
     id_achat INT,
+    image_article VARCHAR(255),
     FOREIGN KEY (id_achat) REFERENCES achat(id)
 );
 
