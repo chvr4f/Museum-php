@@ -1,128 +1,186 @@
--- First drop all tables if they exist (to avoid errors)
-DROP TABLE IF EXISTS avis;
-DROP TABLE IF EXISTS article;
-DROP TABLE IF EXISTS achat;
-DROP TABLE IF EXISTS billets;
-DROP TABLE IF EXISTS oeuvres;
-DROP TABLE IF EXISTS evenement;
-DROP TABLE IF EXISTS visiteur;
-DROP TABLE IF EXISTS employe;
-DROP TABLE IF EXISTS utilisateur;
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: May 11, 2025 at 07:06 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
--- TABLE utilisateur
-CREATE TABLE utilisateur (
-    id INT AUTO_INCREMENT PRIMARY KEY,  
-    type_utilisateur VARCHAR(20) NOT NULL,
-    password VARCHAR(500) NOT NULL,
-    role VARCHAR(30) NOT NULL
-);
-
--- TABLE employe
-CREATE TABLE employe (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(100) UNIQUE NOT NULL,   
-    password VARCHAR(500) NOT NULL,
-    role VARCHAR(100) NOT NULL,
-    date_embauche TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- TABLE visiteur
-CREATE TABLE visiteur (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(500) NOT NULL,
-    tel VARCHAR(20),
-    age INT NOT NULL,
-    nom VARCHAR(100),
-    prenom VARCHAR(100),
-    type_visiteur VARCHAR(30)
-);
-
--- TABLE evenement
-CREATE TABLE evenement (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    titre VARCHAR(100) NOT NULL,
-    description VARCHAR(1000),
-    date_debut DATE NOT NULL,
-    date_fin DATE NOT NULL,
-    lieu VARCHAR(100) NOT NULL,
-    capacite INT NOT NULL,
-    image_evenement VARCHAR(255),
-    id_employe INT,
-    FOREIGN KEY (id_employe) REFERENCES employe(id)
-);
-
--- TABLE billets
-CREATE TABLE billets (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    tarif DECIMAL(10,2) NOT NULL,
-    reduction DECIMAL(5,2) DEFAULT 0,
-    type_billet VARCHAR(100) NOT NULL,
-    id_evenement INT,
-    id_visiteur INT,
-    FOREIGN KEY (id_evenement) REFERENCES evenement(id),
-    FOREIGN KEY (id_visiteur) REFERENCES visiteur(id)
-);
-
--- TABLE achat
-CREATE TABLE achat (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    id_visiteur INT,
-    date_achat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_visiteur) REFERENCES visiteur(id)
-);
-
--- TABLE article
-CREATE TABLE article (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    nom VARCHAR(100) NOT NULL,
-    description VARCHAR(1000),
-    prix DECIMAL(10,2) NOT NULL,
-    quantite INT NOT NULL DEFAULT 0,
-    id_achat INT,
-    image_article VARCHAR(255),
-    FOREIGN KEY (id_achat) REFERENCES achat(id)
-);
-
--- TABLE oeuvres
-CREATE TABLE oeuvres (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    titre VARCHAR(100) NOT NULL,
-    artiste VARCHAR(100) NOT NULL,
-    date_creation DATE,
-    type_oeuvre VARCHAR(100) NOT NULL,
-    materiaux VARCHAR(100),
-    informations TEXT,
-    image_oeuvre VARCHAR(255),
-    id_employe INT,
-    FOREIGN KEY (id_employe) REFERENCES employe(id)
-);
--- TABLE avis
-CREATE TABLE avis (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    id_visiteur INT NOT NULL,
-    id_oeuvres INT,
-    id_evenement INT,
-    id_article INT,
-    notes FLOAT CHECK (notes BETWEEN 0 AND 5),
-    commentaire VARCHAR(1000),
-    date_avis TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_visiteur) REFERENCES visiteur(id),
-    FOREIGN KEY (id_evenement) REFERENCES evenement(id),
-    FOREIGN KEY (id_article) REFERENCES article(id),
-    FOREIGN KEY (id_oeuvres) REFERENCES oeuvres(id),
-    CONSTRAINT chk_reference CHECK (
-        (id_oeuvres IS NOT NULL) OR 
-        (id_evenement IS NOT NULL) OR 
-        (id_article IS NOT NULL)
-    )
-);
-
-INSERT INTO employe (username, password, role) VALUES ('taha', '123123', 'oeuvres');
-INSERT INTO employe (username, password, role) VALUES ('charaf', '123123', 'admin');
-INSERT INTO employe (username, password, role) VALUES ('hajar', '123123', 'evenements');
-INSERT INTO employe (username, password, role) VALUES ('ouissal', '123123', 'visiteurs');
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
 
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `g27`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `achat`
+--
+
+CREATE TABLE `achat` (
+  `id` int(11) NOT NULL,
+  `id_visiteur` int(11) DEFAULT NULL,
+  `date_achat` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `article`
+--
+
+CREATE TABLE `article` (
+  `id` int(11) NOT NULL,
+  `nom` varchar(100) NOT NULL,
+  `description` varchar(1000) DEFAULT NULL,
+  `prix` decimal(10,2) NOT NULL,
+  `quantite` int(11) NOT NULL DEFAULT 0,
+  `id_achat` int(11) DEFAULT NULL,
+  `image_article` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `avis`
+--
+
+CREATE TABLE `avis` (
+  `id` int(11) NOT NULL,
+  `id_visiteur` int(11) NOT NULL,
+  `id_oeuvres` int(11) DEFAULT NULL,
+  `id_evenement` int(11) DEFAULT NULL,
+  `id_article` int(11) DEFAULT NULL,
+  `notes` float DEFAULT NULL CHECK (`notes` between 0 and 5),
+  `commentaire` varchar(1000) DEFAULT NULL,
+  `date_avis` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `avis`
+--
 
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `billets`
+--
+
+CREATE TABLE `billets` (
+  `id` int(11) NOT NULL,
+  `tarif` decimal(10,2) NOT NULL,
+  `reduction` decimal(5,2) DEFAULT 0.00,
+  `type_billet` varchar(100) NOT NULL,
+  `id_evenement` int(11) DEFAULT NULL,
+  `id_visiteur` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employe`
+--
+
+CREATE TABLE `employe` (
+  `id` int(11) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `password` varchar(500) NOT NULL,
+  `role` varchar(100) NOT NULL,
+  `date_embauche` timestamp NOT NULL DEFAULT current_timestamp(),
+  `email` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employe`
+--
+
+-------------------------------------------------------
+
+--
+-- Table structure for table `evenement`
+--
+
+CREATE TABLE `evenement` (
+  `id` int(11) NOT NULL,
+  `titre` varchar(100) NOT NULL,
+  `description` varchar(1000) DEFAULT NULL,
+  `date_debut` date NOT NULL,
+  `date_fin` date NOT NULL,
+  `lieu` varchar(100) NOT NULL,
+  `capacite` int(11) NOT NULL,
+  `image_evenement` varchar(255) DEFAULT NULL,
+  `id_employe` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oeuvres`
+--
+
+CREATE TABLE `oeuvres` (
+  `id` int(11) NOT NULL,
+  `titre` varchar(100) NOT NULL,
+  `artiste` varchar(100) NOT NULL,
+  `date_creation` date DEFAULT NULL,
+  `type_oeuvre` varchar(100) NOT NULL,
+  `materiaux` varchar(100) DEFAULT NULL,
+  `informations` text DEFAULT NULL,
+  `image_oeuvre` varchar(255) DEFAULT NULL,
+  `id_employe` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `utilisateur`
+--
+
+CREATE TABLE `utilisateur` (
+  `id` int(11) NOT NULL,
+  `type_utilisateur` varchar(20) NOT NULL,
+  `password` varchar(500) NOT NULL,
+  `role` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `visiteur`
+--
+
+CREATE TABLE `visiteur` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(500) NOT NULL,
+  `tel` varchar(20) DEFAULT NULL,
+  `age` int(11) NOT NULL,
+  `nom` varchar(100) DEFAULT NULL,
+  `prenom` varchar(100) DEFAULT NULL,
+  `type_visiteur` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `visiteur`
+--
+
+
+--
+-- Indexes for dumped tables
+--
+
+-
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
