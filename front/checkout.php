@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
     <style>
-        /* Checkout Page Styles */
+        /* Checkout Page Styles ghg*/
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: #f8f8f8;
