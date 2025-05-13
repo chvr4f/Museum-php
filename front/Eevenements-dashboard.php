@@ -121,7 +121,7 @@ if (isset($_GET['edit'])) {
     }
 }
 
-// Fetch all events added by this employee
+
 $events = [];
 try {
     $stmt = $pdo->prepare("SELECT * FROM evenement WHERE id_employe = ? ORDER BY date_debut DESC");

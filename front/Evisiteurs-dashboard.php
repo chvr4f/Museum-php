@@ -92,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Handle edit request
 if (isset($_GET['edit'])) {
     try {
         $stmt = $pdo->prepare("SELECT * FROM visiteur WHERE id = ?");

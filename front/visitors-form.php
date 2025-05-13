@@ -2,7 +2,7 @@
 session_start();
 require 'config.php';
 
-// Check if user is logged in and has the correct role
+
 if (!isset($_SESSION['user_id']) || ($_SESSION['role'] !== 'visiteurs' && $_SESSION['role'] !== 'admin')) {
     header('Location: login.php');
     exit();
@@ -22,7 +22,7 @@ $visitor = [
 $edit_mode = false;
 $password_required = true;
 
-// Handle form submissions
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if (isset($_POST['delete'])) {
@@ -100,7 +100,7 @@ if (isset($_GET['edit'])) {
 
         if ($visitor) {
             $edit_mode = true;
-            $password_required = false; // Password not required for updates
+            $password_required = false; 
         } else {
             $error = "Visitor not found";
         }
