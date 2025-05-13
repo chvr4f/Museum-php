@@ -64,7 +64,7 @@
             <p>&#169; Time Travel Museum All Rights Reserved 2025</p>
         </div>
     </footer>
-    <style>/* Login Page Styles */
+    <style>
         .login-main {
             min-height: calc(100vh - 160px);
             display: flex;
@@ -161,7 +161,7 @@
         }
         
         .remember-me {
-            display: inline-flex;  /* Changed from flex to inline-flex */
+            display: inline-flex;  
             align-items: center;
             gap: 0.5rem;
             color: #666;
