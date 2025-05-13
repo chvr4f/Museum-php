@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'evenements') {
     exit();
 }
 
-// Initialize variables
+// Initialize variables here
 $success = $error = '';
 $event = [
     'titre' => '',
