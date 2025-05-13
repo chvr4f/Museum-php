@@ -18,7 +18,7 @@ $employee = [
 ];
 $edit_mode = false;
 
-// Check if we're editing an existing employee
+// Check if we're editing an existing employee hna fin
 if (isset($_GET['edit'])) {
     try {
         $stmt = $pdo->prepare("SELECT * FROM employe WHERE id = ?");
