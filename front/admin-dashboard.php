@@ -28,310 +28,485 @@ $edit_mode = false;
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                        },
-                        dark: {
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        },
-                        admin: {
-                            bg: '#ffebee',
-                            text: '#c62828'
-                        },
-                        oeuvres: {
-                            bg: '#e3f2fd',
-                            text: '#1565c0'
-                        },
-                        evenements: {
-                            bg: '#e8f5e9',
-                            text: '#2e7d32'
-                        },
-                        visiteurs: {
-                            bg: '#fff3e0',
-                            text: '#ef6c00'
-                        },
-                        staff: {
-                            bg: '#f3e5f5',
-                            text: '#7b1fa2'
-                        }
-                    }
-                }
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              600: '#2563eb',
+              700: '#1d4ed8',
+            },
+            dark: {
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            admin: {
+              bg: '#ffebee',
+              text: '#c62828'
+            },
+            oeuvres: {
+              bg: '#e3f2fd',
+              text: '#1565c0'
+            },
+            evenements: {
+              bg: '#e8f5e9',
+              text: '#2e7d32'
+            },
+            visiteurs: {
+              bg: '#fff3e0',
+              text: '#ef6c00'
+            },
+            staff: {
+              bg: '#f3e5f5',
+              text: '#7b1fa2'
             }
+          }
         }
-    </script>
+      }
+    }
+  </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .timeline-marker {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline-marker:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #b38b59, #3a7ca5, #59a7b3);
+            border-radius: 2px;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-50 font-sans antialiased">
+<body class="bg-gray-200 font-body">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
         <?php include 'sidebar.php'; ?>
 
         <!-- Main Content -->
-        <div class="flex-1 p-8">
-            <div class="space-y-6">
-                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    <?php
-                    $cards = [
-                        ['title' => 'Total Visitors', 'value' => '12,486', 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>', 'change' => ['value' => '12%', 'positive' => true], 'color' => 'blue'],
-                        ['title' => 'Ticket Sales', 'value' => '$24,350', 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/></svg>', 'change' => ['value' => '8.5%', 'positive' => true], 'color' => 'green'],
-                        ['title' => 'Replica Sales', 'value' => '$8,294', 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M15.5 14h-.79l-1.2-1.2c.49-.78.79-1.68.79-2.64a6.5 6.5 0 1 0-13 0c0 .96.29 1.86.79 2.64L5.21 14H4.5A1.5 1.5 0 0 0 3 15.5V18a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 19 18v-2.5a1.5 1.5 0 0 0-1.5-1.5zM9 14c0-2.21 1.79-4 4-4s4 1.79 4 4v2H9v-2zm7.5 5.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 5.5 18v-2.5a1.5 1.5 0 0 1 1.5-1.5h13a1.5 1.5 0 0 1 1.5 1.5V18z"/></svg>', 'change' => ['value' => '5.2%', 'positive' => true], 'color' => 'purple'],
-                    ];
-                    foreach ($cards as $card):
-                    ?>
-                        <div class="bg-white rounded-lg shadow-sm p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 rounded-full bg-<?php echo $card['color']; ?>-100 text-<?php echo $card['color']; ?>-600 mr-4">
-                                    <?php echo $card['icon']; ?>
-                                </div>
-                                <div>
-                                    <h3 class="text-sm font-medium text-gray-500"><?php echo $card['title']; ?></h3>
-                                    <p class="text-2xl font-semibold text-gray-800"><?php echo $card['value']; ?></p>
-                                    <p class="mt-1 text-sm <?php echo $card['change']['positive'] ? 'text-green-600' : 'text-red-600'; ?>">
-                                        <?php echo $card['change']['value']; ?> from last month
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+        <div class="flex-1 p-6 lg:p-8">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-heading font-bold text-history-800">Museum Dashboard</h1>
+                    <p class="text-antique-800"><?php echo date('l, F j, Y'); ?></p>
                 </div>
-
-                <div class="grid gap-6 md:grid-cols-2">
-                    <div class="bg-white rounded-lg shadow-sm p-6">
-                        <h3 class="text-lg font-semibold text-gray-800">Visitor Traffic</h3>
-                        <p class="text-sm text-gray-500 mb-4">Last 30 days</p>
-                        <div class="flex h-32 items-end space-x-1">
-                            <?php for ($i = 0; $i < 14; $i++):
-                                $height = 30 + rand(0, 70); // Random height between 30% - 100%
-                            ?>
-                                <div class="relative flex-1 group">
-                                    <div style="height:<?php echo $height; ?>%" class="absolute inset-x-0 bottom-0 bg-indigo-500 rounded-t-sm transition-all duration-300 ease-in-out hover:bg-indigo-600 group-hover:opacity-80"></div>
-                                </div>
-                            <?php endfor; ?>
-                        </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="p-2 rounded-full bg-white shadow-sm text-history-500 hover:bg-history-100">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <span class="absolute top-0 right-0 w-3 h-3 bg-danger-500 rounded-full"></span>
                     </div>
-
-                    <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6 h-full flex flex-col">
-  <div>
-    <h3 class="text-lg font-semibold text-gray-800">Revenue</h3>
-    <p class="text-sm text-gray-500 mb-4">Tickets vs Replicas</p>
-  </div>
-  
-  <div class="flex-grow flex flex-col sm:flex-row gap-4">
-    <!-- Chart Section -->
-    <div class="sm:w-1/2 flex flex-col items-center justify-center">
-      <div class="relative w-28 h-28 sm:w-32 sm:h-32 mb-4">
-        <!-- Chart rings -->
-        <div class="absolute inset-0 rounded-full border-8 border-indigo-200"></div>
-        <div class="absolute inset-0 rounded-full border-8 border-indigo-500 border-t-transparent border-r-transparent border-b-0" style="transform: rotate(45deg)"></div>
-        <div class="absolute inset-0 flex items-center justify-center">
-          <span class="text-lg font-semibold text-gray-800">75%</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Data Bars Section -->
-    <div class="sm:w-1/2 flex flex-col justify-center">
-      <div class="space-y-4">
-        <!-- Tickets -->
-        <div>
-          <div class="flex justify-between text-sm mb-1">
-            <span class="font-medium">Tickets</span>
-            <span>$24,350</span>
-          </div>
-          <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full bg-indigo-500 rounded-full" style="width: 75%;"></div>
-          </div>
-        </div>
-
-        <!-- Replicas -->
-        <div>
-          <div class="flex justify-between text-sm mb-1">
-            <span class="font-medium">Replicas</span>
-            <span>$8,294</span>
-          </div>
-          <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full bg-purple-500 rounded-full" style="width: 25%;"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-                <div class="grid gap-6 lg:grid-cols-3">
-                    <div class="bg-white rounded-lg shadow-sm lg:col-span-1">
-                        <div class="p-4 border-b border-gray-100">
-                            <h3 class="text-lg font-semibold text-gray-800">Upcoming Events</h3>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                            <?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>
                         </div>
-                        <div class="divide-y divide-gray-100">
-                            <?php
-                            $events = [
-                                ['title' => 'Renaissance Exhibition', 'date' => 'May 15, 2025', 'attendees' => 86],
-                                ['title' => 'Modern Art Workshop', 'date' => 'May 18, 2025', 'attendees' => 42],
-                                ['title' => 'Ancient Artifacts Tour', 'date' => 'May 22, 2025', 'attendees' => 120],
-                            ];
-                            foreach ($events as $event):
-                            ?>
-                                <div class="p-4 transition-colors hover:bg-gray-50">
-                                    <div class="flex items-start">
-                                        <div class="p-2 bg-indigo-100 rounded-md text-indigo-600 mr-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
-                                                <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-16H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-medium text-gray-800"><?php echo $event['title']; ?></h4>
-                                            <div class="flex items-center mt-1">
-                                                <span class="text-sm text-gray-500 mr-3"><?php echo $event['date']; ?></span>
-                                                <span class="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">
-                                                    <?php echo $event['attendees']; ?> attendees
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <div class="p-4">
-                            <button class="w-full py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-md hover:bg-indigo-100 transition-colors">
-                                View All Events
-                            </button>
-                        </div>
+                        <span class="font-medium text-history-800 hidden md:inline"><?php echo $_SESSION['username']; ?></span>
                     </div>
+                </div>
+            </div>
 
-                    <div class="bg-white rounded-lg shadow-sm lg:col-span-2">
-                        <div class="p-4 border-b border-gray-100 flex justify-between items-center">
-                            <h3 class="text-lg font-semibold text-gray-800">Recent Reviews</h3>
-                            <div class="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor" class="text-amber-400">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                                </svg>
-                                <span class="ml-1 text-lg font-semibold">4.8</span>
-                                <span class="ml-1 text-sm text-gray-500">average</span>
+            <!-- Stats Cards -->
+            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+                <?php
+                $cards = [
+                    [
+                        'title' => 'Total Visitors', 
+                        'value' => '12,486', 
+                        'icon' => '<i class="fas fa-users"></i>',
+                        'change' => ['value' => '12%', 'positive' => true], 
+                        'color' => 'history'
+                    ],
+                    [
+                        'title' => 'Ticket Revenue', 
+                        'value' => '$24,350', 
+                        'icon' => '<i class="fas fa-ticket-alt"></i>',
+                        'change' => ['value' => '8.5%', 'positive' => true], 
+                        'color' => 'primary'
+                    ],
+                    [
+                        'title' => 'Exhibits', 
+                        'value' => '28', 
+                        'icon' => '<i class="fas fa-landmark"></i>',
+                        'change' => ['value' => '3 new', 'positive' => true], 
+                        'color' => 'antique'
+                    ],
+                    [
+                        'title' => 'Gift Shop Sales', 
+                        'value' => '$8,294', 
+                        'icon' => '<i class="fas fa-gift"></i>',
+                        'change' => ['value' => '5.2%', 'positive' => true], 
+                        'color' => 'future'
+                    ],
+                ];
+                foreach ($cards as $card):
+                ?>
+                    <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-<?php echo $card['color']; ?>-500">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-500 mb-1"><?php echo $card['title']; ?></h3>
+                                <p class="text-2xl font-semibold text-gray-800 mb-2"><?php echo $card['value']; ?></p>
+                                <p class="text-sm <?php echo $card['change']['positive'] ? 'text-success-500' : 'text-danger-500'; ?>">
+                                    <i class="fas fa-arrow-<?php echo $card['change']['positive'] ? 'up' : 'down'; ?> mr-1"></i>
+                                    <?php echo $card['change']['value']; ?> from last month
+                                </p>
+                            </div>
+                            <div class="p-3 rounded-lg bg-<?php echo $card['color']; ?>-100 text-<?php echo $card['color']; ?>-600">
+                                <?php echo $card['icon']; ?>
                             </div>
                         </div>
-                        <div class="divide-y divide-gray-100">
-                            <?php
-                            $reviews = [
-                                ['name' => 'Emma Wilson', 'rating' => 5, 'comment' => 'Absolutely loved the new Renaissance exhibition. The audio guide was very informative!', 'time' => '2 hours ago', 'exhibit' => 'Renaissance Exhibition'],
-                                ['name' => 'Michael Chen', 'rating' => 4, 'comment' => 'Great collection of artifacts. Would recommend the guided tour for a better experience.', 'time' => '5 hours ago', 'exhibit' => 'Ancient Artifacts'],
-                                ['name' => 'Sophia Rodriguez', 'rating' => 5, 'comment' => 'The interactive displays were amazing! My kids loved the experience.', 'time' => '1 day ago', 'exhibit' => 'Modern Art Exhibition'],
-                            ];
-                            foreach ($reviews as $review):
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid gap-6 lg:grid-cols-3 mb-8">
+                <!-- Visitor Traffic -->
+                <div class="bg-white rounded-xl shadow-sm p-6 lg:col-span-2">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-heading font-semibold text-history-800">Visitor Traffic</h3>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 text-xs bg-primary-100 text-primary-600 rounded-full">Weekly</button>
+                            <button class="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">Monthly</button>
+                            <button class="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">Yearly</button>
+                        </div>
+                    </div>
+                    <div class="h-64">
+                        <!-- Chart placeholder - would be replaced with Chart.js in production -->
+                        <div class="flex h-full items-end space-x-2">
+                            <?php 
+                            $days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                            foreach ($days as $i => $day): 
+                                $height = 30 + rand(20, 70);
+                                $peak = $i === 4; // Friday is peak day
                             ?>
-                                <div class="p-4 transition-colors hover:bg-gray-50">
-                                    <div class="flex justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                                                <?php echo substr($review['name'], 0, 1); ?>
-                                            </div>
-                                            <div class="ml-3">
-                                                <h4 class="font-medium text-gray-800"><?php echo $review['name']; ?></h4>
-                                                <div class="flex items-center mt-0.5">
-                                                    <div class="flex mr-2">
-                                                        <?php for ($r = 0; $r < 5; $r++): ?>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" class="<?php echo $r < $review['rating'] ? 'text-amber-400' : 'text-gray-300'; ?>" viewBox="0 0 24 24" stroke="currentColor" fill="<?php echo $r < $review['rating'] ? 'currentColor' : 'none'; ?>">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                                                            </svg>
-                                                        <?php endfor; ?>
-                                                    </div>
-                                                    <span class="text-xs text-gray-500"><?php echo $review['time']; ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full h-fit">
-                                            <?php echo $review['exhibit']; ?>
-                                        </span>
-                                    </div>
-                                    <p class="mt-2 text-sm text-gray-600"><?php echo $review['comment']; ?></p>
+                                <div class="flex-1 flex flex-col items-center">
+                                    <div 
+                                        class="w-full rounded-t-lg transition-all duration-300 hover:opacity-80 <?php echo $peak ? 'bg-primary-600' : 'bg-primary-400'; ?>" 
+                                        style="height:<?php echo $height; ?>%"
+                                    ></div>
+                                    <span class="text-xs text-gray-500 mt-2"><?php echo $day; ?></span>
                                 </div>
                             <?php endforeach; ?>
-                        </div>
-                        <div class="p-4">
-                            <button class="w-full py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-md hover:bg-indigo-100 transition-colors">
-                                View All Reviews
-                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="p-4 border-b border-gray-100 flex justify-between items-center">
-                        <h3 class="text-lg font-semibold text-gray-800">Popular Exhibits</h3>
-                        <span class="text-sm text-gray-500">Based on visitor traffic</span>
+                <!-- Revenue Breakdown -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-xl font-heading font-semibold text-history-800 mb-6">Revenue Sources</h3>
+                    <div class="flex flex-col items-center">
+                        <!-- Donut Chart -->
+                        <div class="relative w-40 h-40 mb-6">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path class="circle-bg" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                    stroke="#e0e0e0" 
+                                    stroke-width="2" 
+                                    fill="none"
+                                />
+                                <path class="circle-1" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                    stroke="#1a56a7" 
+                                    stroke-width="2" 
+                                    stroke-dasharray="60, 100" 
+                                    fill="none"
+                                />
+                                <path class="circle-2" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                    stroke="#b38b59" 
+                                    stroke-width="2" 
+                                    stroke-dasharray="25, 100" 
+                                    stroke-dashoffset="-60" 
+                                    fill="none"
+                                />
+                                <path class="circle-3" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                    stroke="#59a7b3" 
+                                    stroke-width="2" 
+                                    stroke-dasharray="15, 100" 
+                                    stroke-dashoffset="-85" 
+                                    fill="none"
+                                />
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center flex-col">
+                                <span class="text-2xl font-bold text-gray-800">$32,644</span>
+                                <span class="text-xs text-gray-500">Total Revenue</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Legend -->
+                        <div class="w-full space-y-3">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <span class="w-3 h-3 bg-[#1a56a7] rounded-full mr-2"></span>
+                                    <span class="text-sm">Tickets</span>
+                                </div>
+                                <span class="text-sm font-medium">$19,586</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <span class="w-3 h-3 bg-[#b38b59] rounded-full mr-2"></span>
+                                    <span class="text-sm">Memberships</span>
+                                </div>
+                                <span class="text-sm font-medium">$8,167</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <span class="w-3 h-3 bg-[#59a7b3] rounded-full mr-2"></span>
+                                    <span class="text-sm">Gift Shop</span>
+                                </div>
+                                <span class="text-sm font-medium">$4,891</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="bg-gray-50">
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exhibit</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visitors</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rating</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trend</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <?php
-                                $exhibits = [
-                                    ['name' => 'Renaissance Masterpieces', 'category' => 'Fine Art', 'visitors' => '3,245', 'rating' => 4.8, 'trend' => 'up'],
-                                    ['name' => 'Ancient Egyptian Artifacts', 'category' => 'Historical', 'visitors' => '2,876', 'rating' => 4.7, 'trend' => 'up'],
-                                    ['name' => 'Modern Art Collection', 'category' => 'Contemporary', 'visitors' => '2,432', 'rating' => 4.5, 'trend' => 'down'],
-                                    ['name' => 'Dinosaur Fossils', 'category' => 'Natural History', 'visitors' => '2,145', 'rating' => 4.9, 'trend' => 'up'],
-                                    ['name' => 'Cultural Heritage', 'category' => 'Anthropology', 'visitors' => '1,987', 'rating' => 4.6, 'trend' => 'down'],
-                                ];
+                </div>
+            </div>
 
-                                foreach ($exhibits as $exhibit):
-                                ?>
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="font-medium text-gray-900"><?php echo $exhibit['name']; ?></div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">
-                                                <?php echo $exhibit['category']; ?>
+            <!-- Bottom Row -->
+            <div class="grid gap-6 lg:grid-cols-3">
+                <!-- Upcoming Events -->
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-gray-100">
+                        <h3 class="text-xl font-heading font-semibold text-history-800">Upcoming Events</h3>
+                    </div>
+                    <div class="divide-y divide-gray-100 timeline-marker">
+                        <?php
+                        $events = [
+                            [
+                                'title' => 'Medieval Artifacts Exhibition', 
+                                'date' => 'May 15, 2025', 
+                                'time' => '10:00 AM',
+                                'attendees' => 86,
+                                'icon' => '<i class="fas fa-chess-rook"></i>',
+                                'color' => 'antique'
+                            ],
+                            [
+                                'title' => 'Space Exploration Workshop', 
+                                'date' => 'May 18, 2025', 
+                                'time' => '2:00 PM',
+                                'attendees' => 42,
+                                'icon' => '<i class="fas fa-rocket"></i>',
+                                'color' => 'future'
+                            ],
+                            [
+                                'title' => 'Ancient Egypt Tour', 
+                                'date' => 'May 22, 2025', 
+                                'time' => '11:00 AM',
+                                'attendees' => 120,
+                                'icon' => '<i class="fas fa-scroll"></i>',
+                                'color' => 'history'
+                            ],
+                        ];
+                        foreach ($events as $event):
+                        ?>
+                            <div class="p-6 transition-colors hover:bg-gray-50">
+                                <div class="flex items-start">
+                                    <div class="p-3 rounded-lg bg-<?php echo $event['color']; ?>-100 text-<?php echo $event['color']; ?>-600 mr-4">
+                                        <?php echo $event['icon']; ?>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-800"><?php echo $event['title']; ?></h4>
+                                        <div class="flex flex-wrap items-center mt-2 gap-2">
+                                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full flex items-center">
+                                                <i class="far fa-calendar-alt mr-1"></i> <?php echo $event['date']; ?>
                                             </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <?php echo $exhibit['visitors']; ?>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <span class="mr-2 font-medium"><?php echo $exhibit['rating']; ?></span>
-                                                <div class="flex">
+                                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full flex items-center">
+                                                <i class="far fa-clock mr-1"></i> <?php echo $event['time']; ?>
+                                            </span>
+                                            <span class="text-xs bg-<?php echo $event['color']; ?>-100 text-<?php echo $event['color']; ?>-600 px-2 py-1 rounded-full">
+                                                <?php echo $event['attendees']; ?> attendees
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="p-4 bg-gray-50">
+                        <button class="w-full py-2 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors flex items-center justify-center">
+                            View All Events <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Reviews -->
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="text-xl font-heading font-semibold text-history-800">Visitor Feedback</h3>
+                        <div class="flex items-center bg-primary-100 text-primary-600 px-3 py-1 rounded-full">
+                            <i class="fas fa-star mr-1"></i>
+                            <span class="font-medium">4.8</span>
+                            <span class="ml-1 text-xs">average</span>
+                        </div>
+                    </div>
+                    <div class="divide-y divide-gray-100">
+                        <?php
+                        $reviews = [
+                            [
+                                'name' => 'Emma Wilson', 
+                                'rating' => 5, 
+                                'comment' => 'The medieval exhibition was breathtaking! The artifacts were incredibly well-preserved.', 
+                                'time' => '2 hours ago', 
+                                'exhibit' => 'Medieval History',
+                                'avatar' => 'EW'
+                            ],
+                            [
+                                'name' => 'Michael Chen', 
+                                'rating' => 4, 
+                                'comment' => 'Great experience overall. The space exhibit was particularly impressive with its interactive displays.', 
+                                'time' => '5 hours ago', 
+                                'exhibit' => 'Space Exploration',
+                                'avatar' => 'MC'
+                            ],
+                            [
+                                'name' => 'Sophia Rodriguez', 
+                                'rating' => 5, 
+                                'comment' => 'My children loved the ancient Egypt tour. The guide was very knowledgeable and engaging!', 
+                                'time' => '1 day ago', 
+                                'exhibit' => 'Ancient Egypt',
+                                'avatar' => 'SR'
+                            ],
+                        ];
+                        foreach ($reviews as $review):
+                        ?>
+                            <div class="p-6 transition-colors hover:bg-gray-50">
+                                <div class="flex justify-between">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-full bg-history-100 text-history-600 flex items-center justify-center font-bold">
+                                            <?php echo $review['avatar']; ?>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h4 class="font-medium text-gray-800"><?php echo $review['name']; ?></h4>
+                                            <div class="flex items-center mt-1">
+                                                <div class="flex mr-2">
                                                     <?php for ($r = 0; $r < 5; $r++): ?>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" class="<?php echo $r < floor($exhibit['rating']) ? 'text-amber-400' : 'text-gray-300'; ?>" viewBox="0 0 24 24" stroke="currentColor" fill="<?php echo $r < floor($exhibit['rating']) ? 'currentColor' : 'none'; ?>">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                                                        </svg>
+                                                        <i class="fas fa-star text-<?php echo $r < $review['rating'] ? 'amber-400' : 'gray-300'; ?> text-xs"></i>
                                                     <?php endfor; ?>
                                                 </div>
+                                                <span class="text-xs text-gray-500"><?php echo $review['time']; ?></span>
                                             </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center <?php echo $exhibit['trend'] === 'up' ? 'text-green-600' : 'text-red-600'; ?>">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="<?php echo $exhibit['trend'] === 'up' ? '' : 'transform rotate-180'; ?>" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                                                </svg>
-                                                <span class="ml-1 text-sm">
-                                                    <?php echo $exhibit['trend'] === 'up' ? '+12%' : '-5%'; ?>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full h-fit">
+                                        <?php echo $review['exhibit']; ?>
+                                    </span>
+                                </div>
+                                <p class="mt-3 text-sm text-gray-600 italic">"<?php echo $review['comment']; ?>"</p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="p-4 bg-gray-50">
+                        <button class="w-full py-2 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors flex items-center justify-center">
+                            View All Reviews <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Popular Exhibits -->
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-gray-100">
+                        <h3 class="text-xl font-heading font-semibold text-history-800">Popular Exhibits</h3>
+                        <p class="text-sm text-gray-500 mt-1">Ranked by visitor engagement</p>
+                    </div>
+                    <div class="divide-y divide-gray-100">
+                        <?php
+                        $exhibits = [
+                            [
+                                'name' => 'Medieval History', 
+                                'category' => 'European', 
+                                'visitors' => '3,245', 
+                                'engagement' => 92,
+                                'trend' => 'up'
+                            ],
+                            [
+                                'name' => 'Space Exploration', 
+                                'category' => 'Modern', 
+                                'visitors' => '2,876', 
+                                'engagement' => 88,
+                                'trend' => 'up'
+                            ],
+                            [
+                                'name' => 'Ancient Egypt', 
+                                'category' => 'Archaeology', 
+                                'visitors' => '2,432', 
+                                'engagement' => 85,
+                                'trend' => 'steady'
+                            ],
+                            [
+                                'name' => 'Dinosaur Fossils', 
+                                'category' => 'Paleontology', 
+                                'visitors' => '2,145', 
+                                'engagement' => 82,
+                                'trend' => 'down'
+                            ],
+                        ];
+
+                        foreach ($exhibits as $exhibit):
+                        ?>
+                            <div class="p-4 transition-colors hover:bg-gray-50">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-medium text-gray-800"><?php echo $exhibit['name']; ?></h4>
+                                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                                        <?php echo $exhibit['category']; ?>
+                                    </span>
+                                </div>
+                                <div class="mt-2 flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <span class="text-sm text-gray-600 mr-2"><?php echo $exhibit['visitors']; ?> visitors</span>
+                                        <div class="flex items-center text-xs <?php 
+                                            echo $exhibit['trend'] === 'up' ? 'text-success-500' : 
+                                            ($exhibit['trend'] === 'down' ? 'text-danger-500' : 'text-warning-500'); 
+                                        ?>">
+                                            <i class="fas fa-arrow-<?php 
+                                                echo $exhibit['trend'] === 'up' ? 'up' : 
+                                                ($exhibit['trend'] === 'down' ? 'down' : 'right'); 
+                                            ?> mr-1"></i>
+                                            <?php 
+                                                echo $exhibit['trend'] === 'up' ? 'Growing' : 
+                                                ($exhibit['trend'] === 'down' ? 'Declining' : 'Steady'); 
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="w-16 bg-gray-200 rounded-full h-2">
+                                        <div 
+                                            class="bg-primary-600 h-2 rounded-full" 
+                                            style="width: <?php echo $exhibit['engagement']; ?>%"
+                                        ></div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="p-4 bg-gray-50">
+                        <button class="w-full py-2 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors flex items-center justify-center">
+                            View All Exhibits <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </body>
-
 </html>
