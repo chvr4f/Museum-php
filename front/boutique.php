@@ -479,7 +479,7 @@ try {
                     const price = parseFloat(this.getAttribute('data-price'));
                     const image = this.getAttribute('data-image');
                     
-                    // Check if item already in cart
+                    
                     const existingItem = cart.find(item => item.id === id);
                     
                     if (existingItem) {
@@ -500,7 +500,7 @@ try {
                     updateCart();
                     cartDropdown.classList.add('active');
                     
-                    // Add animation
+                   
                     const originalText = this.textContent;
                     this.textContent = 'Added!';
                     this.style.backgroundColor = '#4CAF50';
@@ -512,9 +512,9 @@ try {
                 });
             });
             
-            // Update cart display
+            
             function updateCart() {
-                // Clear cart items
+                
                 cartItems.innerHTML = '';
                 
                 if (cart.length === 0) {
@@ -541,7 +541,7 @@ try {
                         cartItems.appendChild(cartItem);
                     });
                     
-                    // Add remove item functionality
+                    
                     document.querySelectorAll('.remove-item').forEach(button => {
                         button.addEventListener('click', function(e) {
                             e.stopPropagation();
@@ -550,7 +550,7 @@ try {
                             localStorage.setItem('cart', JSON.stringify(cart));
                             updateCart();
                             
-                            // Show confirmation message
+                            
                             const confirmation = document.createElement('div');
                             confirmation.textContent = 'Item removed from cart';
                             confirmation.style.position = 'fixed';
@@ -572,24 +572,23 @@ try {
                     cartTotal.textContent = total.toFixed(2);
                 }
                 
-                // Update cart count
+                
                 const count = cart.reduce((sum, item) => sum + item.quantity, 0);
                 cartCount.textContent = count;
             }
             
-            // Simple category filter functionality
+            
             document.querySelectorAll('.boutique-category').forEach(category => {
                 category.addEventListener('click', function() {
-                    // Remove active class from all categories
+                    
                     document.querySelectorAll('.boutique-category').forEach(c => {
                         c.classList.remove('active');
                     });
                     
-                    // Add active class to clicked category
+                    
                     this.classList.add('active');
                     
-                    // In a real implementation, you would filter products here
-                    // This is just a placeholder for the UI
+                   
                 });
             });
         });

@@ -107,6 +107,91 @@
                     </ul>
                 </nav>
             </div>
+            <style>
+    
+    @media (max-width: 1024px) {
+        .first-header {
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        
+        .search-bar {
+            order: 3;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .buttons {
+            margin-left: auto;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .first-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+        }
+        
+        .logo {
+            order: -1;
+            text-align: left;
+            margin-bottom: 0.5rem;
+        }
+        
+        .search-bar {
+            order: 0;
+        }
+        
+        .buttons {
+            justify-content: flex-end;
+            width: 100%;
+        }
+        
+        .second-header nav ul {
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: flex-start;
+        }
+        
+        .visitor-container {
+            margin-left: auto;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .first-header {
+            padding: 0.8rem;
+        }
+        
+        .buttons {
+            gap: 0.5rem;
+        }
+        
+        .header-button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        .second-header {
+            padding: 0.8rem;
+        }
+        
+        .second-header nav ul {
+            gap: 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        .visitor-name span {
+            display: none;
+        }
+        
+        .visitor-name {
+            padding: 8px;
+        }
+    }
+</style>
         </header>
         <main>
             <section class="hero-container">
@@ -129,7 +214,7 @@
             <?php
             require 'config.php';
 
-            // Fetch only 4 current or upcoming exhibitions
+            
             $currentDate = date('Y-m-d');
             $exhibitions = [];
             try {

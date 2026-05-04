@@ -2,13 +2,12 @@
 session_start();
 require 'config.php';
 
-// Verify admin role
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
   header('Location: login.php');
   exit();
 }
 
-// Initialize variables
 $success = $error = '';
 $employee = [
   'id' => '',
@@ -18,7 +17,7 @@ $employee = [
 ];
 $edit_mode = false;
 
-// Check if we're editing an existing employee hna fin
+
 if (isset($_GET['edit'])) {
     try {
         $stmt = $pdo->prepare("SELECT * FROM employe WHERE id = ?");
@@ -38,11 +37,11 @@ if (isset($_GET['edit'])) {
     }
 }
 
-// Handle form submissions
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if (isset($_POST['delete_employee'])) {
-            // Prevent admin from deleting themselves
+            
             if ($_POST['employee_id'] != $_SESSION['user_id']) {
                 $stmt = $pdo->prepare("DELETE FROM employe WHERE id = ?");
                 $stmt->execute([$_POST['employee_id']]);
@@ -53,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: employee-list.php');
             exit();
         } elseif (isset($_POST['update_employee'])) {
-            // Update employee - password is optional
+            
             if (!empty($_POST['password'])) {
                 $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("UPDATE employe SET 
@@ -81,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: employee-list.php');
             exit();
         } elseif (isset($_POST['add_employee'])) {
-            // Add new employee with provided password
+            
             if (empty($_POST['password'])) {
                 $error = "Password is required when adding a new employee";
             } else {
@@ -105,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Display messages from session
+
 if (isset($_SESSION['success'])) {
     $success = $_SESSION['success'];
     unset($_SESSION['success']);

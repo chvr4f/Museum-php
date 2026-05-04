@@ -2,7 +2,7 @@
 session_start();
 require 'config.php';
 
-// Verify admin or oeuvres role
+
 if (!isset($_SESSION['user_id']) || ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'oeuvres')) {
   header('Location: login.php');
   exit();
@@ -12,12 +12,12 @@ $artworks = [];
 $error = '';
 
 try {
-  // Show all artworks for both admin and oeuvres roles
+  
   if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'oeuvres') {
     $stmt = $pdo->prepare("SELECT * FROM oeuvres ORDER BY id DESC");
     $stmt->execute();
   } else {
-    // Other roles only see their own artworks (though this case shouldn't happen due to the role check above)
+    
     $stmt = $pdo->prepare("SELECT * FROM oeuvres WHERE id_employe = ? ORDER BY id DESC");
     $stmt->execute([$_SESSION['user_id']]);
   }

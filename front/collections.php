@@ -1,7 +1,6 @@
 <?php
 require 'config.php';
 
-// Fetch all active artworks
 $artworks = [];
 try {
     $stmt = $pdo->query("SELECT * FROM oeuvres ORDER BY date_creation DESC");
@@ -23,7 +22,7 @@ try {
 </head>
 <body>
     <header>
-        <!-- Include your header content from main.php -->
+        
         <?php include 'header.php'; ?>
     </header>
 
@@ -68,14 +67,14 @@ try {
     </main>
 
     <footer>
-        <!-- Include your footer content from main.php -->
+       
         <?php include 'footer.php'; ?>
     </footer>
 </body>
 </html>
 
 <style>
-    /* Collections Page Specific Styles */
+   
 .no-artworks {
     grid-column: 1 / -1;
     text-align: center;

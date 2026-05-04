@@ -2,13 +2,12 @@
 session_start();
 require 'config.php';
 
-// Authorization check - allow both admin and event staff
+
 if (!isset($_SESSION['user_id']) || ($_SESSION['role'] !== 'evenements' && $_SESSION['role'] !== 'admin')) {
     header('Location: login.php');
     exit();
 }
 
-// Initialize variables with default values
 $success = $error = '';
 $event = [
     'id' => '',
@@ -23,10 +22,10 @@ $event = [
 $edit_mode = false;
 $current_image = '';
 
-// Handle form submissions
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        // Handle file upload
+        
         $imagePath = null;
         if (isset($_FILES['image_evenement']) && $_FILES['image_evenement']['error'] === UPLOAD_ERR_OK) {
             $uploadDir = 'uploads/evenements/';
@@ -40,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if (move_uploaded_file($_FILES['image_evenement']['tmp_name'], $destination)) {
                 $imagePath = $destination;
-                // Delete old image if exists
+            
                 if (!empty($_POST['current_image']) && file_exists($_POST['current_image'])) {
                     unlink($_POST['current_image']);
                 }
@@ -50,11 +49,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (isset($_POST['delete'])) {
-            // Delete event
+            
             $stmt = $pdo->prepare("DELETE FROM evenement WHERE id = ?");
             $stmt->execute([$_POST['event_id']]);
             
-            // Delete the associated image file
+           
             if (!empty($_POST['current_image']) && file_exists($_POST['current_image'])) {
                 unlink($_POST['current_image']);
             }
@@ -63,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: events-list.php');
             exit();
         } elseif (isset($_POST['update'])) {
-            // Update event
+            
             $stmt = $pdo->prepare("UPDATE evenement SET 
                 titre = ?, description = ?, date_debut = ?, date_fin = ?, 
                 lieu = ?, capacite = ?, image_evenement = ?

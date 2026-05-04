@@ -21,10 +21,10 @@ $article = [
 $edit_mode = false;
 $current_image = '';
 
-// Handle form submission
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   try {
-      // Handle image upload
+  
       $imagePath = null;
       if (isset($_FILES['image_article']) && $_FILES['image_article']['error'] === UPLOAD_ERR_OK) {
           $uploadDir = 'uploads/articles/';
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           $imagePath = $_POST['current_image'];
       }
 
-      // Validate required fields
+   
       if (empty($_POST['nom']) || empty($_POST['prix']) || !is_numeric($_POST['prix']) || !is_numeric($_POST['quantite'])) {
           throw new Exception("Please fill all required fields with valid values");
       }
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-// Handle edit request
+
 if (isset($_GET['edit'])) {
   try {
       $stmt = $pdo->prepare("SELECT * FROM article WHERE id = ?");

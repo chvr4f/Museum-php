@@ -2,13 +2,13 @@
 session_start();
 require 'config.php';
 
-// Check if user is logged in and has the correct role
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'oeuvres') {
     header('Location: login.html');
     exit();
 }
 
-// Initialize variables
+
 $success = $error = '';
 $artwork = [
     'titre' => '',
@@ -22,10 +22,9 @@ $artwork = [
 $edit_mode = false;
 $current_image = '';
 
-// Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        // Handle file upload
+        
         $imagePath = null;
         if (isset($_FILES['image_oeuvre']) && $_FILES['image_oeuvre']['error'] === UPLOAD_ERR_OK) {
             $uploadDir = 'uploads/oeuvres/';
@@ -103,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Handle edit request
+
 if (isset($_GET['edit'])) {
     try {
         $stmt = $pdo->prepare("SELECT * FROM oeuvres WHERE id = ? AND id_employe = ?");
@@ -121,7 +120,7 @@ if (isset($_GET['edit'])) {
     }
 }
 
-// Fetch all artworks added by this employee
+
 $artworks = [];
 try {
     $stmt = $pdo->prepare("SELECT * FROM oeuvres WHERE id_employe = ? ORDER BY id DESC");

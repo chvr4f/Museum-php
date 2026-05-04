@@ -100,5 +100,54 @@ $visitorName = $_SESSION['prenom'] ?? 'Visitor';
     font-size: 20px;
 }
     </style>
+    <style>
+    /* Base Header Styles */
+   
+    /* Media Query specifically for phones */
+    @media (max-width: 480px) {
+        .first-header {
+            padding: 0.75rem;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            text-align: left;
+        }
+
+        .header-button {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        /* Adjust visitor container for very small screens */
+        .visitor-container {
+            margin-left: auto;
+        }
+
+        .visitor-name {
+            padding: 0.4rem;
+        }
+
+        .logout-button {
+            width: 28px;
+            height: 28px;
+        }
+
+        .logout-button i {
+            font-size: 16px;
+        }
+    }
+
+    /* Optional: Hide "Online Boutique" text on very small screens */
+    @media (max-width: 360px) {
+        .header-button[href="boutique.php"] span {
+            display: none;
+        }
+        .header-button[href="boutique.php"]::after {
+            content: "Boutique";
+        }
+    }
+</style>
 </body>
 </html>

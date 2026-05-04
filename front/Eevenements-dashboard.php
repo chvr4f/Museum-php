@@ -2,13 +2,12 @@
 session_start();
 require 'config.php';
 
-// Check if user is logged in and has the correct role
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'evenements') {
     header('Location: login.html');
     exit();
 }
 
-// Initialize variables here
+
 $success = $error = '';
 $event = [
     'titre' => '',
@@ -22,7 +21,7 @@ $event = [
 $edit_mode = false;
 $current_image = '';
 
-// Handle form submissions
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Handle file upload
@@ -39,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if (move_uploaded_file($_FILES['image_evenement']['tmp_name'], $destination)) {
                 $imagePath = $destination;
-                // Delete old image if exists
+                
                 if (!empty($_POST['current_image']) && file_exists($_POST['current_image'])) {
                     unlink($_POST['current_image']);
                 }
@@ -49,18 +48,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (isset($_POST['cancel'])) {
-            // Cancel event (you might want to implement soft delete instead)
+            
             $stmt = $pdo->prepare("DELETE FROM evenement WHERE id = ? AND id_employe = ?");
             $stmt->execute([$_POST['event_id'], $_SESSION['user_id']]);
             
-            // Delete the associated image file
+            
             if (!empty($_POST['current_image']) && file_exists($_POST['current_image'])) {
                 unlink($_POST['current_image']);
             }
             
             $success = "Event cancelled successfully!";
         } elseif (isset($_POST['update'])) {
-            // Update event
+            
             $stmt = $pdo->prepare("UPDATE evenement SET 
                 titre = ?, description = ?, date_debut = ?, date_fin = ?, 
                 lieu = ?, capacite = ?, image_evenement = ?
@@ -80,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             $success = "Event updated successfully!";
         } else {
-            // Add new event
+            
             $stmt = $pdo->prepare("INSERT INTO evenement 
                 (titre, description, date_debut, date_fin, lieu, capacite, image_evenement, id_employe) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -103,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Handle edit request
+
 if (isset($_GET['edit'])) {
     try {
         $stmt = $pdo->prepare("SELECT * FROM evenement WHERE id = ? AND id_employe = ?");
@@ -140,7 +139,7 @@ try {
     <title>Events Dashboard - Time Travel Museum</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Reuse the same styles as Eoeuvres-dashboard.php with minor adjustments */
+        
         body {
             font-family: 'Montserrat', sans-serif;
             margin: 0;
