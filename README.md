@@ -48,7 +48,7 @@ A comprehensive web-based platform for managing museum operations, including art
 
 1. **Clone the repository:**
    ```bash
-   git clone <your-repository-url>
+   git clone <https://github.com/chvr4f/Museum-php.git>
    cd museum-management
    ```
 
